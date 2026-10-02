@@ -1,258 +1,215 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface ScrollCanvasBackgroundProps {
   containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-const TOTAL_FRAMES = 150;
+const FRAME_1_COUNT = 150;
+const FRAME_2_COUNT = 150;
+const TOTAL_FRAMES = FRAME_1_COUNT + FRAME_2_COUNT;
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
 
 export default function ScrollCanvasBackground({
   containerRef: externalContainerRef,
 }: ScrollCanvasBackgroundProps = {}) {
   const localContainerRef = useRef<HTMLDivElement | null>(null);
   const containerRef = externalContainerRef || localContainerRef;
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const imagesCache = useRef<Map<number, HTMLImageElement>>(new Map());
+  const imagesCacheRef = useRef<Map<number, HTMLImageElement>>(new Map());
+  const targetFrameRef = useRef<number>(0);
+  const currentFrameRef = useRef<number>(0);
+  const lastDrawnFrameRef = useRef<number | null>(null);
+  const lastRenderedImageRef = useRef<HTMLImageElement | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
-  const targetProgressRef = useRef<number>(0);
-  const currentProgressRef = useRef<number>(0);
-  const lastDrawnFrameRef = useRef<number>(-1);
-  const animationFrameIdRef = useRef<number | null>(null);
-  const needsRedrawRef = useRef<boolean>(true);
-  const [, setInitialLoaded] = useState(false);
+  const getFrameUrl = (globalFrameIndex: number) => {
+    const frameNumber = globalFrameIndex + 1;
 
-  // URL generator for Frame 1 sequence
-  const getFrameUrl = (index: number) => {
-    const padded = String(index).padStart(3, "0");
-    return `/frames/frame-${padded}.jpg`;
+    if (frameNumber <= FRAME_1_COUNT) {
+      const padded = String(frameNumber).padStart(3, "0");
+      return `/frames/frame-${padded}.jpg`;
+    }
+
+    const secondIndex = frameNumber - FRAME_1_COUNT;
+    const padded = String(secondIndex).padStart(3, "0");
+    return `/frame2/ezgif-frame-${padded}.png`;
   };
 
-  // Helper to load a frame
-  const loadFrame = (index: number): Promise<HTMLImageElement> => {
+  const loadFrame = (globalFrameIndex: number): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
-      if (imagesCache.current.has(index)) {
-        resolve(imagesCache.current.get(index)!);
+      const cached = imagesCacheRef.current.get(globalFrameIndex);
+      if (cached) {
+        resolve(cached);
         return;
       }
 
-      const img = new Image();
-      img.src = getFrameUrl(index);
-      img.onload = () => {
-        imagesCache.current.set(index, img);
-        needsRedrawRef.current = true;
-        resolve(img);
+      const image = new Image();
+      image.decoding = "async";
+      image.onload = () => {
+        imagesCacheRef.current.set(globalFrameIndex, image);
+        if (
+          globalFrameIndex >= FRAME_1_COUNT &&
+          Math.round(currentFrameRef.current) === globalFrameIndex
+        ) {
+          lastDrawnFrameRef.current = null;
+        }
+        resolve(image);
       };
-      img.onerror = () => {
-        // Fallback to png naming if jpg fails
-        const fallbackImg = new Image();
-        const padded = String(index).padStart(3, "0");
-        fallbackImg.src = `/frames/frame-${padded}.png`;
-        fallbackImg.onload = () => {
-          imagesCache.current.set(index, fallbackImg);
-          needsRedrawRef.current = true;
-          resolve(fallbackImg);
-        };
-        fallbackImg.onerror = reject;
+      image.onerror = () => {
+        if (globalFrameIndex < FRAME_1_COUNT) {
+          const fallback = new Image();
+          fallback.decoding = "async";
+          fallback.onload = () => {
+            imagesCacheRef.current.set(globalFrameIndex, fallback);
+            resolve(fallback);
+          };
+          fallback.onerror = () => reject(new Error(`Failed to load frame ${globalFrameIndex}`));
+          const padded = String(globalFrameIndex + 1).padStart(3, "0");
+          fallback.src = `/frames/frame-${padded}.png`;
+          return;
+        }
+
+        reject(new Error(`Failed to load frame ${globalFrameIndex}`));
       };
+      image.src = getFrameUrl(globalFrameIndex);
     });
   };
 
-  // Preload frames progressively
   useEffect(() => {
-    let isCancelled = false;
+    let cancelled = false;
 
-    // 1. Immediately load first and last frames
-    Promise.all([loadFrame(1), loadFrame(TOTAL_FRAMES)]).then(() => {
-      if (!isCancelled) {
-        setInitialLoaded(true);
-        needsRedrawRef.current = true;
-      }
-    });
+    const preloadFrames = async () => {
+      const priorityFrames = [0, FRAME_1_COUNT - 1, FRAME_1_COUNT, TOTAL_FRAMES - 1, 1, 2, 149, 150, 151, 152];
 
-    const preloadAll = async () => {
-      // 2. Preload keyframes (every 10th frame)
-      for (let i = 10; i < TOTAL_FRAMES; i += 10) {
-        if (isCancelled) return;
+      for (const frameIndex of priorityFrames) {
+        if (cancelled) return;
+        if (frameIndex < 0 || frameIndex >= TOTAL_FRAMES) continue;
+
         try {
-          await loadFrame(i);
+          await loadFrame(frameIndex);
         } catch {
-          // continue
+          // continue loading background frames without blocking the sequence
         }
       }
 
-      // 3. Progressively load all remaining frames
-      for (let i = 2; i <= TOTAL_FRAMES; i++) {
-        if (isCancelled) return;
-        if (!imagesCache.current.has(i)) {
-          await new Promise((r) => setTimeout(r, 12));
-          if (isCancelled) return;
-          loadFrame(i).catch(() => {});
+      for (let frameIndex = 0; frameIndex < TOTAL_FRAMES; frameIndex += 1) {
+        if (cancelled) return;
+        if (imagesCacheRef.current.has(frameIndex)) continue;
+
+        try {
+          await loadFrame(frameIndex);
+        } catch {
+          // keep progressively preloading without interrupting the active scroll animation
         }
       }
     };
 
-    preloadAll();
+    preloadFrames();
 
     return () => {
-      isCancelled = true;
+      cancelled = true;
     };
   }, []);
 
-  // Main canvas render & animation loop
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-    const ctx = canvas.getContext("2d", { alpha: false });
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const defaultSmoothingQuality = ctx.imageSmoothingQuality;
 
-    // Check prefers-reduced-motion
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let prefersReducedMotion = mediaQuery.matches;
-
-    const handleMotionPreference = (e: MediaQueryListEvent) => {
-      prefersReducedMotion = e.matches;
-    };
-    mediaQuery.addEventListener("change", handleMotionPreference);
-
-    // Resize canvas with DPR support
     const resizeCanvas = () => {
-      if (!canvas) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      const targetW = Math.floor(width * dpr);
-      const targetH = Math.floor(height * dpr);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      canvas.style.opacity = "1";
+      canvas.style.transition = "none";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
 
-      if (canvas.width !== targetW || canvas.height !== targetH) {
-        canvas.width = targetW;
-        canvas.height = targetH;
-        needsRedrawRef.current = true;
+    const drawCoverImage = (image: HTMLImageElement) => {
+      if (!canvas) return;
+
+      const cssWidth = window.innerWidth;
+      const cssHeight = window.innerHeight;
+      const imageWidth = image.naturalWidth || cssWidth;
+      const imageHeight = image.naturalHeight || cssHeight;
+      const scale = Math.max(cssWidth / imageWidth, cssHeight / imageHeight);
+      const drawWidth = imageWidth * scale;
+      const drawHeight = imageHeight * scale;
+      const x = (cssWidth - drawWidth) / 2;
+      const y = (cssHeight - drawHeight) / 2;
+
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
+      ctx.drawImage(image, x, y, drawWidth, drawHeight);
+      lastRenderedImageRef.current = image;
+    };
+
+    const renderFrame = (frameIndex: number): boolean => {
+      const actualFrameIndex = clamp(frameIndex, 0, TOTAL_FRAMES - 1);
+      const isFrame2 = actualFrameIndex >= FRAME_1_COUNT;
+      const requestedImage =
+        imagesCacheRef.current.get(actualFrameIndex) ??
+        (isFrame2 ? null : lastRenderedImageRef.current);
+
+      if (!requestedImage) return false;
+
+      if (isFrame2) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.globalAlpha = 1;
+      } else {
+        ctx.imageSmoothingQuality = defaultSmoothingQuality;
       }
+
+      drawCoverImage(requestedImage);
+      return true;
+    };
+
+    const handleScroll = () => {
+      const rect = container.getBoundingClientRect();
+      const scrollableDistance = Math.max(container.offsetHeight - window.innerHeight, 1);
+      const progress = clamp(-rect.top / scrollableDistance, 0, 1);
+      targetFrameRef.current = progress * (TOTAL_FRAMES - 1);
+    };
+
+    const renderLoop = () => {
+      currentFrameRef.current += (targetFrameRef.current - currentFrameRef.current) * 0.12;
+      const roundedFrame = Math.round(currentFrameRef.current);
+
+      if (roundedFrame !== lastDrawnFrameRef.current) {
+        if (renderFrame(roundedFrame)) {
+          lastDrawnFrameRef.current = roundedFrame;
+        }
+      }
+
+      animationFrameRef.current = window.requestAnimationFrame(renderLoop);
     };
 
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas, { passive: true });
-
-    // Scroll listener: calculate progress strictly relative to hero container
-    const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const rect = container.getBoundingClientRect();
-      const scrollableDistance = container.offsetHeight - window.innerHeight;
-
-      if (scrollableDistance <= 0) return;
-
-      // Progress from 0.0 at beginning of hero section to 1.0 at very end
-      const progress = Math.min(1, Math.max(0, -rect.top / scrollableDistance));
-      targetProgressRef.current = progress;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
+    animationFrameRef.current = window.requestAnimationFrame(renderLoop);
 
-    // Helper: Find closest loaded frame
-    const getBestAvailableImage = (targetIndex: number): HTMLImageElement | null => {
-      if (imagesCache.current.has(targetIndex)) {
-        return imagesCache.current.get(targetIndex)!;
-      }
-
-      loadFrame(targetIndex).catch(() => {});
-
-      for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
-        const left = targetIndex - offset;
-        const right = targetIndex + offset;
-        if (left >= 1 && imagesCache.current.has(left)) {
-          return imagesCache.current.get(left)!;
-        }
-        if (right <= TOTAL_FRAMES && imagesCache.current.has(right)) {
-          return imagesCache.current.get(right)!;
-        }
-      }
-
-      return null;
-    };
-
-    // Draw frame onto canvas using cover fitting with zero distortion
-    const drawCoverImage = (img: HTMLImageElement) => {
-      const cWidth = canvas.width;
-      const cHeight = canvas.height;
-      const iWidth = img.naturalWidth || 1280;
-      const iHeight = img.naturalHeight || 720;
-
-      if (!cWidth || !cHeight || !iWidth || !iHeight) return;
-
-      const imgRatio = iWidth / iHeight;
-      const canvasRatio = cWidth / cHeight;
-
-      let drawWidth: number;
-      let drawHeight: number;
-
-      if (canvasRatio > imgRatio) {
-        drawWidth = cWidth;
-        drawHeight = cWidth / imgRatio;
-      } else {
-        drawHeight = cHeight;
-        drawWidth = cHeight * imgRatio;
-      }
-
-      const offsetX = (cWidth - drawWidth) * 0.5;
-      const offsetY = (cHeight - drawHeight) * 0.5;
-
-      ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-    };
-
-    // Continuous Animation loop using rAF + smooth lerp
-    let isRunning = true;
-
-    const renderLoop = () => {
-      if (!isRunning) return;
-
-      if (prefersReducedMotion) {
-        currentProgressRef.current = targetProgressRef.current;
-      } else {
-        // Continuous smooth progress lerp
-        const diff = targetProgressRef.current - currentProgressRef.current;
-        if (Math.abs(diff) > 0.00005) {
-          currentProgressRef.current += diff * 0.1;
-        } else {
-          currentProgressRef.current = targetProgressRef.current;
-        }
-      }
-
-      const p = currentProgressRef.current;
-      const frameIndex = Math.min(
-        Math.max(Math.round(1 + p * (TOTAL_FRAMES - 1)), 1),
-        TOTAL_FRAMES
-      );
-
-      if (frameIndex !== lastDrawnFrameRef.current || needsRedrawRef.current) {
-        const img = getBestAvailableImage(frameIndex);
-        if (img) {
-          drawCoverImage(img);
-          lastDrawnFrameRef.current = frameIndex;
-          needsRedrawRef.current = false;
-        }
-      }
-
-      animationFrameIdRef.current = requestAnimationFrame(renderLoop);
-    };
-
-    animationFrameIdRef.current = requestAnimationFrame(renderLoop);
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      isRunning = false;
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("scroll", handleScroll);
-      mediaQuery.removeEventListener("change", handleMotionPreference);
     };
   }, [containerRef]);
 
@@ -262,8 +219,8 @@ export default function ScrollCanvasBackground({
       className="hero-sequence"
       style={{
         position: "relative",
-        minHeight: "400vh",
-        height: "400vh",
+        minHeight: "800vh",
+        height: "800vh",
       }}
     >
       <div
@@ -286,6 +243,10 @@ export default function ScrollCanvasBackground({
             width: "100%",
             height: "100%",
             display: "block",
+            opacity: 1,
+            filter: "none",
+            transition: "none",
+            background: "transparent",
           }}
         />
       </div>
