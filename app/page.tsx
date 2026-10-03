@@ -4,6 +4,8 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import ScrollCanvasBackground from "@/components/ScrollCanvasBackground";
 import AboutOurSchoolSection from "@/components/AboutOurSchoolSection";
+import AcademicsSection from "@/components/AcademicsSection";
+import FacilitiesSection from "@/components/FacilitiesSection";
 import StudentReviewsSection from "@/components/StudentReviewsSection";
 import CinematicFooter from "@/components/CinematicFooter";
 
@@ -20,6 +22,8 @@ export default function Home() {
         </section>
 
         <AboutOurSchoolSection />
+        <AcademicsSection />
+        <FacilitiesSection />
         <StudentReviewsSection />
         <CinematicFooter />
       </main>
