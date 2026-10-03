@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 interface ScrollCanvasBackgroundProps {
   containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 const FRAME_1_COUNT = 150;
-const FRAME_2_COUNT = 150;
-const TOTAL_FRAMES = FRAME_1_COUNT + FRAME_2_COUNT;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -26,22 +24,9 @@ export default function ScrollCanvasBackground({
   const lastRenderedImageRef = useRef<HTMLImageElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
-  const getFrameUrl = (globalFrameIndex: number) => {
-    const frameNumber = globalFrameIndex + 1;
-
-    if (frameNumber <= FRAME_1_COUNT) {
-      const padded = String(frameNumber).padStart(3, "0");
-      return `/frames/frame-${padded}.jpg`;
-    }
-
-    const secondIndex = frameNumber - FRAME_1_COUNT;
-    const padded = String(secondIndex).padStart(3, "0");
-    return `/frame2/ezgif-frame-${padded}.png`;
-  };
-
-  const loadFrame = (globalFrameIndex: number): Promise<HTMLImageElement> => {
+  const loadFrame = useCallback((frameIndex: number): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
-      const cached = imagesCacheRef.current.get(globalFrameIndex);
+      const cached = imagesCacheRef.current.get(frameIndex);
       if (cached) {
         resolve(cached);
         return;
@@ -50,44 +35,34 @@ export default function ScrollCanvasBackground({
       const image = new Image();
       image.decoding = "async";
       image.onload = () => {
-        imagesCacheRef.current.set(globalFrameIndex, image);
-        if (
-          globalFrameIndex >= FRAME_1_COUNT &&
-          Math.round(currentFrameRef.current) === globalFrameIndex
-        ) {
-          lastDrawnFrameRef.current = null;
-        }
+        imagesCacheRef.current.set(frameIndex, image);
         resolve(image);
       };
       image.onerror = () => {
-        if (globalFrameIndex < FRAME_1_COUNT) {
-          const fallback = new Image();
-          fallback.decoding = "async";
-          fallback.onload = () => {
-            imagesCacheRef.current.set(globalFrameIndex, fallback);
-            resolve(fallback);
-          };
-          fallback.onerror = () => reject(new Error(`Failed to load frame ${globalFrameIndex}`));
-          const padded = String(globalFrameIndex + 1).padStart(3, "0");
-          fallback.src = `/frames/frame-${padded}.png`;
-          return;
-        }
-
-        reject(new Error(`Failed to load frame ${globalFrameIndex}`));
+        const fallback = new Image();
+        fallback.decoding = "async";
+        fallback.onload = () => {
+          imagesCacheRef.current.set(frameIndex, fallback);
+          resolve(fallback);
+        };
+        fallback.onerror = () => reject(new Error(`Failed to load frame ${frameIndex}`));
+        const padded = String(frameIndex + 1).padStart(3, "0");
+        fallback.src = `/frames/frame-${padded}.png`;
       };
-      image.src = getFrameUrl(globalFrameIndex);
+      const padded = String(frameIndex + 1).padStart(3, "0");
+      image.src = `/frames/frame-${padded}.jpg`;
     });
-  };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
 
     const preloadFrames = async () => {
-      const priorityFrames = [0, FRAME_1_COUNT - 1, FRAME_1_COUNT, TOTAL_FRAMES - 1, 1, 2, 149, 150, 151, 152];
+      const priorityFrames = [0, FRAME_1_COUNT - 1, 1, 2, 149];
 
       for (const frameIndex of priorityFrames) {
         if (cancelled) return;
-        if (frameIndex < 0 || frameIndex >= TOTAL_FRAMES) continue;
+        if (frameIndex < 0 || frameIndex >= FRAME_1_COUNT) continue;
 
         try {
           await loadFrame(frameIndex);
@@ -96,7 +71,7 @@ export default function ScrollCanvasBackground({
         }
       }
 
-      for (let frameIndex = 0; frameIndex < TOTAL_FRAMES; frameIndex += 1) {
+      for (let frameIndex = 0; frameIndex < FRAME_1_COUNT; frameIndex += 1) {
         if (cancelled) return;
         if (imagesCacheRef.current.has(frameIndex)) continue;
 
@@ -113,7 +88,7 @@ export default function ScrollCanvasBackground({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [loadFrame]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -157,21 +132,11 @@ export default function ScrollCanvasBackground({
     };
 
     const renderFrame = (frameIndex: number): boolean => {
-      const actualFrameIndex = clamp(frameIndex, 0, TOTAL_FRAMES - 1);
-      const isFrame2 = actualFrameIndex >= FRAME_1_COUNT;
-      const requestedImage =
-        imagesCacheRef.current.get(actualFrameIndex) ??
-        (isFrame2 ? null : lastRenderedImageRef.current);
+      const actualFrameIndex = clamp(frameIndex, 0, FRAME_1_COUNT - 1);
+      const requestedImage = imagesCacheRef.current.get(actualFrameIndex) ?? lastRenderedImageRef.current;
 
       if (!requestedImage) return false;
-
-      if (isFrame2) {
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
-        ctx.globalAlpha = 1;
-      } else {
-        ctx.imageSmoothingQuality = defaultSmoothingQuality;
-      }
+      ctx.imageSmoothingQuality = defaultSmoothingQuality;
 
       drawCoverImage(requestedImage);
       return true;
@@ -181,7 +146,7 @@ export default function ScrollCanvasBackground({
       const rect = container.getBoundingClientRect();
       const scrollableDistance = Math.max(container.offsetHeight - window.innerHeight, 1);
       const progress = clamp(-rect.top / scrollableDistance, 0, 1);
-      targetFrameRef.current = progress * (TOTAL_FRAMES - 1);
+      targetFrameRef.current = progress * (FRAME_1_COUNT - 1);
     };
 
     const renderLoop = () => {

@@ -1,26 +1,27 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 const quickLinks = [
-  { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
-  { label: "Academics", href: "#academics" },
-  { label: "Facilities", href: "#facilities" },
-  { label: "Student Life", href: "#student-life" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "News", href: "#news" },
-  { label: "Admissions", href: "#admissions" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/garden#about" },
+  { label: "Academics", href: "/garden#academics" },
+  { label: "Facilities", href: "/garden#facilities" },
+  { label: "Student Life", href: "/garden#student-life" },
+  { label: "Gallery", href: "/garden#gallery" },
+  { label: "Garden", href: "/garden" },
+  { label: "Admissions", href: "/garden#admissions" },
+  { label: "Contact", href: "/garden#contact" },
 ];
 
 const academicLinks = [
-  { label: "Primary School", href: "#about" },
-  { label: "Middle & High School", href: "#about" },
-  { label: "Academic Programs", href: "#academics" },
-  { label: "Co-Curricular Activities", href: "#student-life" },
+  { label: "Primary School", href: "/garden#about" },
+  { label: "Middle & High School", href: "/garden#about" },
+  { label: "Academic Programs", href: "/garden#academics" },
+  { label: "Co-Curricular Activities", href: "/garden#student-life" },
 ];
 
 const clamp = (value: number, min: number, max: number) =>
@@ -141,10 +142,10 @@ export default function CinematicFooter() {
   }, []);
 
   return (
-    <footer ref={footerRef} className="cinematic-footer" aria-label="School footer">
+    <footer id="contact" ref={footerRef} className="cinematic-footer" aria-label="School footer">
       <div className="footer-content">
         <div className="footer-brand">
-          <a className="footer-school-mark" href="#hero" aria-label="Back to home">
+          <Link className="footer-school-mark" href="/" aria-label="Back to home">
             <span className="footer-logo">
               <Image
                 src="/images/logo.png"
@@ -158,7 +159,7 @@ export default function CinematicFooter() {
               <strong>Sri Aurobindo Mira</strong>
               <span>Universal School • CBSE</span>
             </span>
-          </a>
+          </Link>
           <p className="footer-tagline">Learning today. Growing tomorrow.</p>
         </div>
 

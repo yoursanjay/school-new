@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import Image from "next/image";
-import { Phone, ArrowUpRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Phone } from "lucide-react";
 
 interface NavItem {
   label: string;
@@ -11,26 +12,32 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "#hero", id: "hero" },
-  { label: "About", href: "#about", id: "about" },
-  { label: "Academics", href: "#academics", id: "academics" },
-  { label: "Facilities", href: "#facilities", id: "facilities" },
-  { label: "Student Life", href: "#student-life", id: "student-life" },
-  { label: "Gallery", href: "#gallery", id: "gallery" },
-  { label: "News", href: "#news", id: "news" },
-  { label: "Admissions", href: "#admissions", id: "admissions" },
+  { label: "Home", href: "/", id: "hero" },
+  { label: "About", href: "/garden#about", id: "about" },
+  { label: "Academics", href: "/garden#academics", id: "academics" },
+  { label: "Facilities", href: "/garden#facilities", id: "facilities" },
+  { label: "Student Life", href: "/garden#student-life", id: "student-life" },
+  { label: "Gallery", href: "/garden#gallery", id: "gallery" },
+  { label: "Garden", href: "/garden", id: "garden" },
+  { label: "Admissions", href: "/garden#admissions", id: "admissions" },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
+  const [activeSection, setActiveSection] = useState(
+    pathname === "/" ? "hero" : "garden",
+  );
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
 
   // Trigger micro-animation on load
   useEffect(() => {
-    setMounted(true);
+    const animationFrame = window.requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => window.cancelAnimationFrame(animationFrame);
   }, []);
 
   // Scroll listener for background opacity & top scroll progress indicator
@@ -53,18 +60,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // IntersectionObserver for tracking active section without interfering with Frame-1 canvas
+  // IntersectionObserver for tracking the active Garden section.
   useEffect(() => {
+    if (pathname !== "/garden") return;
+
     const sectionIds = [
-      "hero",
       "about",
       "academics",
       "facilities",
       "student-life",
-      "values",
       "gallery",
-      "news",
-      "testimonials",
       "admissions",
       "contact",
     ];
@@ -72,14 +77,7 @@ export default function Navbar() {
     const observerCallback: IntersectionObserverCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const id = entry.target.id;
-          if (id === "values") {
-            setActiveSection("student-life");
-          } else if (id === "testimonials") {
-            setActiveSection("news");
-          } else {
-            setActiveSection(id);
-          }
+          setActiveSection(entry.target.id);
         }
       });
     };
@@ -98,19 +96,23 @@ export default function Navbar() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   // Smooth scroll handler
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
     setMobileOpen(false);
 
-    if (href === "#hero" || href === "#home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    const destination = new URL(href, window.location.href);
+    if (destination.origin !== window.location.origin || destination.pathname !== pathname) {
       return;
     }
 
-    const targetId = href.replace("#", "");
+    e.preventDefault();
+    const targetId = destination.hash.slice(1);
+    if (!targetId) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
       const offsetTop =
@@ -163,9 +165,9 @@ export default function Navbar() {
           }}
         >
           {/* LEFT: Premium School Brand */}
-          <a
-            href="#hero"
-            onClick={(e) => handleNavClick(e, "#hero")}
+          <Link
+            href="/"
+            onClick={(e) => handleNavClick(e, "/")}
             className="flex items-center gap-3 shrink-0 cursor-pointer group select-none"
             aria-label="Sri Aurobindo Mira Universal School Home"
           >
@@ -203,7 +205,7 @@ export default function Navbar() {
                 Universal School • CBSE
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* CENTER: Navigation Links (Desktop) */}
           <nav
@@ -216,7 +218,13 @@ export default function Navbar() {
             }}
           >
             {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.id;
+              const isActive =
+                (item.id === "hero" && pathname === "/") ||
+                (item.id === "garden" && pathname === "/garden") ||
+                (item.id !== "hero" &&
+                  item.id !== "garden" &&
+                  pathname === "/garden" &&
+                  activeSection === item.id);
 
               return (
                 <a
@@ -270,8 +278,8 @@ export default function Navbar() {
 
             {/* Contact link (Desktop only) */}
             <a
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "#contact")}
+              href="/garden#contact"
+              onClick={(e) => handleNavClick(e, "/garden#contact")}
               className={`hidden sm:inline-flex text-[12.5px] font-medium px-2 py-1 transition-colors duration-200 ${
                 activeSection === "contact"
                   ? "text-[#F4C542]"
@@ -283,8 +291,8 @@ export default function Navbar() {
 
             {/* Premium Apply Now CTA Button */}
             <a
-              href="#admissions"
-              onClick={(e) => handleNavClick(e, "#admissions")}
+              href="/garden#admissions"
+              onClick={(e) => handleNavClick(e, "/garden#admissions")}
               className="inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-[#05121e] cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(244,197,66,0.30)] hover:shadow-[0_6px_22px_rgba(244,197,66,0.45)]"
               style={{
                 background: "linear-gradient(135deg, #F4C542, #DFAE24)",
@@ -332,7 +340,13 @@ export default function Navbar() {
           >
             <nav className="flex flex-col gap-1">
               {NAV_ITEMS.map((item, idx) => {
-                const isActive = activeSection === item.id;
+                const isActive =
+                  (item.id === "hero" && pathname === "/") ||
+                  (item.id === "garden" && pathname === "/garden") ||
+                  (item.id !== "hero" &&
+                    item.id !== "garden" &&
+                    pathname === "/garden" &&
+                    activeSection === item.id);
                 return (
                   <a
                     key={item.id}
@@ -356,8 +370,8 @@ export default function Navbar() {
               })}
 
               <a
-                href="#contact"
-                onClick={(e) => handleNavClick(e, "#contact")}
+                href="/garden#contact"
+                onClick={(e) => handleNavClick(e, "/garden#contact")}
                 className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-medium text-white/88 hover:text-[#F4C542] hover:bg-white/5"
               >
                 <span>Contact</span>
@@ -374,8 +388,8 @@ export default function Navbar() {
               </a>
 
               <a
-                href="#admissions"
-                onClick={(e) => handleNavClick(e, "#admissions")}
+                href="/garden#admissions"
+                onClick={(e) => handleNavClick(e, "/garden#admissions")}
                 className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-[13px] font-bold text-[#05121e] shadow-md"
                 style={{
                   background: "linear-gradient(135deg, #F4C542, #DFAE24)",
