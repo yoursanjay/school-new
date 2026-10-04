@@ -11,6 +11,10 @@ interface NavItem {
   id: string;
 }
 
+interface NavbarProps {
+  hideDuringKingfisher?: boolean;
+}
+
 const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/", id: "hero" },
   { label: "About", href: "/garden#about", id: "about" },
@@ -22,7 +26,9 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Admissions", href: "/garden#admissions", id: "admissions" },
 ];
 
-export default function Navbar() {
+export default function Navbar({
+  hideDuringKingfisher = false,
+}: NavbarProps) {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState(
@@ -31,6 +37,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [kingfisherVisible, setKingfisherVisible] = useState(false);
 
   // Trigger micro-animation on load
   useEffect(() => {
@@ -39,6 +46,20 @@ export default function Navbar() {
     });
     return () => window.cancelAnimationFrame(animationFrame);
   }, []);
+
+  useEffect(() => {
+    if (!hideDuringKingfisher) return;
+
+    const section = document.querySelector(".kingfisher-cinematic-section");
+    if (!section) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setKingfisherVisible(entry.isIntersecting);
+    });
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, [hideDuringKingfisher]);
 
   // Scroll listener for background opacity & top scroll progress indicator
   useEffect(() => {
@@ -123,6 +144,8 @@ export default function Navbar() {
       });
     }
   };
+
+  if (hideDuringKingfisher && kingfisherVisible) return null;
 
   return (
     <>
