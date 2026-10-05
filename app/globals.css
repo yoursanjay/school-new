@@ -106,18 +106,17 @@ body {
 }
 
 .kingfisher-scroll-container {
-  --bg: #B6C3B0;
-  --paper: #E3E8DE;
-  --ink: #10201F;
-  --ink-2: #2E3D3A;
-  --ink-3: #4E5E58;
-  --line: rgba(16, 32, 31, 0.14);
-  --ghost: #ADBAA7;
-  --orange: #E8732A;
-  --orange-2: #F3A15E;
-  --teal: #0E7C86;
-  --panel: #0F1D1C;
-  --panel-2: #172A28;
+  --bg: #fbf9f5;
+  --paper: #f4efe6;
+  --ink: #1e242b;
+  --ink-2: #3f4a55;
+  --ink-3: #64748b;
+  --line: rgba(30, 36, 43, 0.14);
+  --navy: #0c1b33;
+  --gold: #c99738;
+  --gold-light: #e6b85c;
+  --panel: #fbf9f5;
+  --panel-2: #f4efe6;
   position: relative;
   height: 400vh;
   background: var(--bg);
@@ -137,21 +136,63 @@ body {
 .kingfisher-cinematic-section::after {
   position: absolute;
   z-index: 2;
-  inset: 58% 0 0;
-  background: linear-gradient(0deg, rgba(182, 195, 176, 0.94), rgba(182, 195, 176, 0));
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(251, 249, 245, 0.96) 0%, rgba(251, 249, 245, 0.84) 27%, rgba(251, 249, 245, 0.28) 52%, transparent 72%),
+    linear-gradient(0deg, rgba(251, 249, 245, 0.88), transparent 36%);
   content: "";
   pointer-events: none;
 }
 
-.kingfisher-video {
+.kingfisher-image-wrap {
   position: absolute;
   z-index: 0;
   inset: 0;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.kingfisher-image {
+  object-fit: cover;
+  object-position: center 48%;
+  transform: scale(1.08);
+  transition: object-position 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kingfisher-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  background: var(--bg);
+  object-position: center center;
+  pointer-events: none;
+  opacity: 0;
+  background: transparent;
+  transform: scale(1.04);
+  filter: saturate(1.15) contrast(1.04) brightness(0.96);
+  transition: opacity 220ms ease;
+}
+
+.kingfisher-video.is-visible {
+  opacity: 1;
+}
+
+.kingfisher-image-enter {
+  animation: kingfisher-image-enter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes kingfisher-image-enter {
+  from {
+    opacity: 0.45;
+    transform: scale(1.12);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.08);
+  }
 }
 
 .kingfisher-word-wrap {
@@ -170,8 +211,8 @@ body {
   font-size: clamp(90px, 17vw, 300px);
   line-height: 0.9;
   letter-spacing: -0.08em;
-  color: var(--ghost);
-  mix-blend-mode: darken;
+  color: rgba(12, 27, 51, 0.09);
+  mix-blend-mode: multiply;
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0, 0, 0, 0.35) 62%, transparent 86%);
   mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0, 0, 0, 0.35) 62%, transparent 86%);
 }
@@ -190,6 +231,25 @@ body {
   font-family: var(--font-jetbrains-mono), "Courier New", monospace;
 }
 
+.kingfisher-branding {
+  position: absolute;
+  top: 24px;
+  left: clamp(24px, 5.3vw, 84px);
+  color: var(--ink);
+  font-size: 9px;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.kingfisher-branding::after {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 10px;
+  background: var(--line);
+  content: "";
+}
+
 .kingfisher-copy {
   position: absolute;
   bottom: 16%;
@@ -202,7 +262,7 @@ body {
   align-items: center;
   gap: 12px;
   margin-bottom: 22px;
-  color: var(--ink-2);
+  color: var(--ink-3);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -211,7 +271,7 @@ body {
 .kingfisher-eyebrow i {
   width: 28px;
   height: 1px;
-  background: var(--teal);
+  background: var(--gold);
 }
 
 .kingfisher-headline {
@@ -224,7 +284,7 @@ body {
 }
 
 .kingfisher-headline em {
-  color: var(--teal);
+  color: var(--gold);
   font-weight: 400;
 }
 
@@ -250,16 +310,16 @@ body {
   gap: 15px;
   padding: 15px 20px;
   border-radius: 999px;
-  background: linear-gradient(120deg, var(--orange), var(--orange-2));
-  color: #fffaf3;
+  background: linear-gradient(120deg, var(--gold), var(--gold-light));
+  color: var(--navy);
   font-weight: 600;
-  box-shadow: 0 9px 24px rgba(166, 77, 29, 0.18);
+  box-shadow: 0 9px 24px rgba(12, 27, 51, 0.14);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .kingfisher-primary-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 13px 28px rgba(166, 77, 29, 0.24);
+  box-shadow: 0 13px 28px rgba(12, 27, 51, 0.2);
 }
 
 .kingfisher-secondary-cta {
@@ -290,24 +350,39 @@ body {
   border: 2px solid var(--bg);
   border-radius: 50%;
   color: white;
+  padding: 0;
+  cursor: pointer;
   font-size: 9px;
   font-weight: 700;
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.kingfisher-avatar.is-active {
+  z-index: 1;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 2px var(--gold-light);
+}
+
+.kingfisher-avatar:focus-visible,
+.kingfisher-card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
 }
 
 .kingfisher-avatar-one {
-  background: linear-gradient(145deg, #365a54, #89a18b);
+  background: linear-gradient(145deg, var(--navy), var(--ink-2));
 }
 
 .kingfisher-avatar-two {
-  background: linear-gradient(145deg, #b56845, #e8b27d);
+  background: linear-gradient(145deg, var(--gold), var(--gold-light));
 }
 
 .kingfisher-avatar-three {
-  background: linear-gradient(145deg, #315e69, #80a8a0);
+  background: linear-gradient(145deg, var(--ink-2), var(--ink-3));
 }
 
 .kingfisher-avatar-four {
-  background: linear-gradient(145deg, #566443, #a9ae76);
+  background: linear-gradient(145deg, var(--navy), var(--gold));
 }
 
 .kingfisher-cards {
@@ -320,10 +395,25 @@ body {
   min-width: 0;
   flex: 1;
   overflow: hidden;
-  border: 1px solid rgba(227, 232, 222, 0.2);
+  border: 1px solid rgba(30, 36, 43, 0.12);
   border-radius: 13px;
   background: var(--panel);
-  box-shadow: 0 18px 48px rgba(16, 32, 31, 0.2);
+  box-shadow: 0 18px 48px rgba(12, 27, 51, 0.16);
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: transform 280ms ease, box-shadow 280ms ease;
+}
+
+.kingfisher-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 52px rgba(12, 27, 51, 0.2);
+}
+
+.kingfisher-card-offset:hover {
+  transform: translateY(15px);
 }
 
 .kingfisher-card-offset {
@@ -334,17 +424,34 @@ body {
   position: relative;
   height: clamp(115px, 11vw, 156px);
   overflow: hidden;
-  background:
-    radial-gradient(circle at 55% 35%, rgba(243, 161, 94, 0.35), transparent 46%),
-    linear-gradient(135deg, var(--panel-2), #395a50);
+  background: var(--panel-2);
 }
 
-.kingfisher-card canvas {
+.kingfisher-card-art img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
+  object-fit: cover;
+  transition: opacity 300ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: kingfisher-preview-enter 360ms ease-out;
+}
+
+@keyframes kingfisher-preview-enter {
+  from {
+    opacity: 0.5;
+    transform: scale(1.04);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.kingfisher-card:hover .kingfisher-card-art img {
+  transform: scale(1.06);
 }
 
 .kingfisher-card-index {
@@ -354,8 +461,8 @@ body {
   padding: 6px 8px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 5px;
-  background: rgba(15, 29, 28, 0.72);
-  color: var(--paper);
+  background: rgba(12, 27, 51, 0.72);
+  color: #fff;
   font-size: 8px;
   letter-spacing: 0.07em;
 }
@@ -365,8 +472,24 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 11px 12px 13px;
-  color: var(--paper);
+  color: var(--ink);
   font-size: 11px;
+}
+
+.kingfisher-caption-label {
+  animation: kingfisher-caption-enter 320ms ease both;
+}
+
+@keyframes kingfisher-caption-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .kingfisher-dots {
@@ -378,11 +501,11 @@ body {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgba(227, 232, 222, 0.4);
+  background: rgba(30, 36, 43, 0.24);
 }
 
 .kingfisher-dots i:first-child {
-  background: var(--orange);
+  background: var(--gold);
 }
 
 .kingfisher-metadata {
@@ -432,7 +555,7 @@ body {
 
 .kingfisher-replay span {
   margin-left: 6px;
-  color: var(--orange);
+  color: var(--gold);
   font-size: 15px;
 }
 
@@ -523,12 +646,20 @@ body {
   }
 
   .kingfisher-cinematic-section::after {
-    inset: 25% 0 0;
-    background: linear-gradient(0deg, rgba(182, 195, 176, 0.98) 0%, rgba(182, 195, 176, 0.82) 48%, rgba(182, 195, 176, 0) 100%);
+    background:
+      linear-gradient(0deg, rgba(251, 249, 245, 0.98) 0%, rgba(251, 249, 245, 0.92) 39%, rgba(251, 249, 245, 0.4) 68%, rgba(251, 249, 245, 0.08) 100%),
+      linear-gradient(90deg, rgba(251, 249, 245, 0.4), transparent 75%);
   }
 }
 
 @media (max-width: 480px) {
+  .kingfisher-branding {
+    top: 18px;
+    left: 20px;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+
   .kingfisher-word {
     top: 15vh;
     letter-spacing: -0.09em;
@@ -552,7 +683,7 @@ body {
   }
 
   .kingfisher-trust-row {
-    display: none;
+    margin-bottom: 8px;
   }
 
   .kingfisher-card,
@@ -581,8 +712,17 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kingfisher-primary-cta {
-    transition-duration: 0.01ms;
+  .kingfisher-primary-cta,
+  .kingfisher-avatar,
+  .kingfisher-card,
+  .kingfisher-card-art img,
+  .kingfisher-caption-label {
+    transition: none;
+    animation: none;
+  }
+
+  .kingfisher-image-enter {
+    animation: none;
   }
 }
 
@@ -2497,7 +2637,8 @@ canvas {
   gap: 16px;
   height: clamp(420px, 31vw, 560px);
   margin-top: 28px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   container-type: inline-size;
 }
 
@@ -3368,6 +3509,16 @@ canvas {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .school-experience-card,
+  .school-experience-visual img,
+  .school-experience-copy {
+    transition: none;
+  }
+
   .school-story-image img,
   .school-testimonial-image img,
   .school-story-link span,

@@ -95,6 +95,10 @@ export default function ScrollCanvasBackground({
     const container = containerRef.current;
     if (!canvas || !container) return;
 
+    const motionPreference = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    let reducedMotion = motionPreference.matches;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const defaultSmoothingQuality = ctx.imageSmoothingQuality;
@@ -146,13 +150,27 @@ export default function ScrollCanvasBackground({
       const rect = container.getBoundingClientRect();
       const scrollableDistance = Math.max(container.offsetHeight - window.innerHeight, 1);
       const progress = clamp(-rect.top / scrollableDistance, 0, 1);
-      targetFrameRef.current = progress * (FRAME_1_COUNT - 1);
+      targetFrameRef.current = reducedMotion
+        ? 0
+        : progress * (FRAME_1_COUNT - 1);
     };
 
     const renderLoop = () => {
-      currentFrameRef.current += (targetFrameRef.current - currentFrameRef.current) * 0.12;
-      const roundedFrame = Math.round(currentFrameRef.current);
+      if (reducedMotion) {
+        currentFrameRef.current = 0;
+        const firstFrame = imagesCacheRef.current.get(0);
+        if (firstFrame) {
+          drawCoverImage(firstFrame);
+          lastDrawnFrameRef.current = 0;
+          animationFrameRef.current = null;
+          return;
+        }
+      } else {
+        currentFrameRef.current +=
+          (targetFrameRef.current - currentFrameRef.current) * 0.12;
+      }
 
+      const roundedFrame = Math.round(currentFrameRef.current);
       if (roundedFrame !== lastDrawnFrameRef.current) {
         if (renderFrame(roundedFrame)) {
           lastDrawnFrameRef.current = roundedFrame;
@@ -162,19 +180,41 @@ export default function ScrollCanvasBackground({
       animationFrameRef.current = window.requestAnimationFrame(renderLoop);
     };
 
+    const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+      currentFrameRef.current = 0;
+      lastDrawnFrameRef.current = null;
+      handleScroll();
+      if (animationFrameRef.current === null) {
+        animationFrameRef.current = window.requestAnimationFrame(renderLoop);
+      }
+    };
+
+    const handleResize = () => {
+      resizeCanvas();
+      if (reducedMotion) {
+        lastDrawnFrameRef.current = null;
+        if (animationFrameRef.current === null) {
+          animationFrameRef.current = window.requestAnimationFrame(renderLoop);
+        }
+      }
+    };
+
     resizeCanvas();
     handleScroll();
     animationFrameRef.current = window.requestAnimationFrame(renderLoop);
 
-    window.addEventListener("resize", resizeCanvas, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
+    motionPreference.addEventListener("change", handleMotionPreferenceChange);
 
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
+      motionPreference.removeEventListener("change", handleMotionPreferenceChange);
     };
   }, [containerRef]);
 
