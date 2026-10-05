@@ -2,6 +2,7 @@ import KingfisherSection from "@/components/KingfisherSection";
 import Navbar from "@/components/Navbar";
 import ScrollCanvasBackground from "@/components/ScrollCanvasBackground";
 import SchoolExperiencesSection from "@/components/sections/SchoolExperiences";
+import SchoolStorySection from "@/components/sections/SchoolStory";
 import SchoolFAQ from "@/components/school/SchoolFAQ";
 import SchoolFooter from "@/components/school/SchoolFooter";
 import SchoolJournal from "@/components/school/SchoolJournal";
@@ -18,6 +19,7 @@ export default function Home() {
         </section>
         <KingfisherSection />
         <SchoolExperiencesSection />
+        <SchoolStorySection />
 
         <div
           className={`school-sections ${schoolSerif.variable} ${schoolMono.variable}`}

@@ -2636,10 +2636,15 @@ canvas {
   align-items: stretch;
   gap: 16px;
   height: clamp(420px, 31vw, 560px);
-  margin-top: 28px;
+  margin-top: clamp(360px, 50vh, 500px);
   overflow-x: auto;
   overflow-y: hidden;
+  scrollbar-width: none;
   container-type: inline-size;
+}
+
+.school-experiences-rail::-webkit-scrollbar {
+  display: none;
 }
 
 .school-experience-card {
@@ -2807,6 +2812,7 @@ canvas {
   .school-experiences-rail {
     gap: 10px;
     height: 360px;
+    margin-top: clamp(112px, 20vh, 180px);
   }
 
   .school-experience-card {

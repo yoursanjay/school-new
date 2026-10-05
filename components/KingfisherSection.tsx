@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
+import { preconnect } from "react-dom";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -76,12 +77,14 @@ const PREVIEW_LABELS: Record<SceneId, readonly [string, string]> = {
 };
 
 export default function KingfisherSection() {
+  preconnect("https://thinkingods.com");
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
   const imageWrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const wasVisibleRef = useRef(false);
   const currentProgressRef = useRef(0);
-  const fallbackTimeoutRef = useRef<number | null>(null);
   const [activeScene, setActiveScene] = useState<SceneId>("campus");
   const [videoReady, setVideoReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -193,6 +196,159 @@ export default function KingfisherSection() {
   }, []);
 
   useEffect(() => {
+    const stage = stageRef.current;
+    const video = videoRef.current;
+    if (!stage || !video) return;
+
+    const motionPreference = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    let reducedMotion = motionPreference.matches;
+    let pendingPlayback = false;
+    let playbackRequestId = 0;
+
+    const revealFinalFrame = () => {
+      if (
+        reducedMotion &&
+        Number.isFinite(video.duration) &&
+        video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA &&
+        video.currentTime >= video.duration
+      ) {
+        setVideoReady(true);
+      }
+    };
+
+    const showFinalFrame = () => {
+      video.pause();
+      if (!Number.isFinite(video.duration)) return;
+      video.currentTime = video.duration;
+      revealFinalFrame();
+    };
+
+    const startBirdAnimation = () => {
+      if (
+        !wasVisibleRef.current ||
+        !pendingPlayback ||
+        reducedMotion ||
+        video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA
+      ) {
+        return;
+      }
+
+      pendingPlayback = false;
+      const requestId = playbackRequestId;
+      video.play().then(
+        () => {
+          if (requestId === playbackRequestId) setVideoReady(true);
+        },
+        () => {
+          if (requestId === playbackRequestId) setVideoReady(false);
+        },
+      );
+    };
+
+    const handleCanPlay = () => startBirdAnimation();
+    const handleLoadedMetadata = () => {
+      if (reducedMotion) {
+        showFinalFrame();
+      } else if (!wasVisibleRef.current) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    };
+    const handleLoadedData = () => {
+      startBirdAnimation();
+      revealFinalFrame();
+    };
+    const handleSeeked = () => {
+      revealFinalFrame();
+      startBirdAnimation();
+    };
+    const handleEnded = () => {
+      video.pause();
+      setVideoReady(true);
+    };
+    const handleError = () => {
+      video.pause();
+      setVideoReady(false);
+    };
+    const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+      if (reducedMotion) {
+        pendingPlayback = false;
+        playbackRequestId += 1;
+        showFinalFrame();
+      } else if (wasVisibleRef.current) {
+        video.pause();
+        video.currentTime = 0;
+        pendingPlayback = true;
+        playbackRequestId += 1;
+        startBirdAnimation();
+      } else {
+        video.pause();
+        video.currentTime = 0;
+        setVideoReady(false);
+      }
+    };
+
+    video.pause();
+    video.currentTime = 0;
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("canplay", handleCanPlay);
+    video.addEventListener("seeked", handleSeeked);
+    video.addEventListener("ended", handleEnded);
+    video.addEventListener("error", handleError);
+    motionPreference.addEventListener("change", handleMotionPreferenceChange);
+
+    if (reducedMotion) {
+      showFinalFrame();
+    } else if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      startBirdAnimation();
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const isVisible =
+            entry.isIntersecting && entry.intersectionRatio >= 0.35;
+          if (isVisible === wasVisibleRef.current) return;
+
+          wasVisibleRef.current = isVisible;
+          playbackRequestId += 1;
+          if (isVisible && !reducedMotion) {
+            pendingPlayback = true;
+            video.pause();
+            video.currentTime = 0;
+            startBirdAnimation();
+          } else {
+            pendingPlayback = false;
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(stage);
+
+    return () => {
+      observer.disconnect();
+      wasVisibleRef.current = false;
+      motionPreference.removeEventListener(
+        "change",
+        handleMotionPreferenceChange,
+      );
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("canplay", handleCanPlay);
+      video.removeEventListener("seeked", handleSeeked);
+      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("error", handleError);
+      video.pause();
+    };
+  }, []);
+
+  useEffect(() => {
     const image = imageWrapRef.current?.querySelector("img");
     if (!image) return;
 
@@ -201,89 +357,6 @@ export default function KingfisherSection() {
       : (currentProgressRef.current - 0.5) * 28;
     image.style.transform = `scale(${reducedMotion ? 1 : 1.08}) translate3d(0, ${imageTravel}px, 0)`;
   }, [activeScene, reducedMotion]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const runVideo = () => {
-      if (reducedMotion) {
-        video.pause();
-        video.currentTime = video.duration || 0;
-        setVideoReady(true);
-        return;
-      }
-
-      if (video.readyState >= 2) {
-        video.muted = true;
-        video.playsInline = true;
-        video.autoplay = true;
-        video.play().catch(() => {
-          setVideoReady(false);
-        });
-        setVideoReady(true);
-      }
-    };
-
-    const handleLoadedData = () => {
-      setVideoReady(true);
-      runVideo();
-    };
-
-    const handleCanPlay = () => {
-      setVideoReady(true);
-      runVideo();
-    };
-
-    const handleEnded = () => {
-      if (video.duration) {
-        video.currentTime = video.duration;
-        video.pause();
-      }
-      setVideoReady(true);
-    };
-
-    const handleError = () => {
-      setVideoReady(false);
-      video.pause();
-    };
-
-    if (reducedMotion) {
-      video.pause();
-      video.currentTime = video.duration || 0;
-      setVideoReady(true);
-      return;
-    }
-
-    video.addEventListener("loadeddata", handleLoadedData);
-    video.addEventListener("canplay", handleCanPlay);
-    video.addEventListener("ended", handleEnded);
-    video.addEventListener("error", handleError);
-
-    if (fallbackTimeoutRef.current) {
-      window.clearTimeout(fallbackTimeoutRef.current);
-    }
-
-    fallbackTimeoutRef.current = window.setTimeout(() => {
-      if (video.readyState < 2) {
-        setVideoReady(false);
-      }
-    }, 9000);
-
-    if (video.readyState >= 2) {
-      runVideo();
-    }
-
-    return () => {
-      if (fallbackTimeoutRef.current) {
-        window.clearTimeout(fallbackTimeoutRef.current);
-      }
-      video.removeEventListener("loadeddata", handleLoadedData);
-      video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("error", handleError);
-    };
-  }, [reducedMotion]);
 
   const replayFromStart = () => {
     const container = containerRef.current;
@@ -325,23 +398,11 @@ export default function KingfisherSection() {
 
           <video
             ref={videoRef}
-            className={`kingfisher-video${videoReady && !reducedMotion ? " is-visible" : ""}`}
+            className={`kingfisher-video${videoReady ? " is-visible" : ""}`}
             src="https://thinkingods.com/demos/kingfisher-hero/hero.mp4"
             muted
             playsInline
             preload="auto"
-            autoPlay
-            onLoadedData={() => setVideoReady(true)}
-            onCanPlay={() => setVideoReady(true)}
-            onEnded={() => {
-              const video = videoRef.current;
-              if (video && video.duration) {
-                video.currentTime = video.duration;
-                video.pause();
-              }
-              setVideoReady(true);
-            }}
-            onError={() => setVideoReady(false)}
           />
         </div>
 
