@@ -203,6 +203,7 @@ export default function SchoolJournal() {
       originX: event.clientX,
       originY: event.clientY,
       dragged: false,
+      photoIndex: null,
     };
     velocityRef.current = { x: 0, y: 0 };
     setIsDragging(true);
