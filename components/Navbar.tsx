@@ -37,7 +37,7 @@ export default function Navbar({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [kingfisherVisible, setKingfisherVisible] = useState(false);
+  const [immersiveSectionVisible, setImmersiveSectionVisible] = useState(false);
 
   // Trigger micro-animation on load
   useEffect(() => {
@@ -50,11 +50,11 @@ export default function Navbar({
   useEffect(() => {
     if (!hideDuringKingfisher) return;
 
-    const section = document.querySelector(".kingfisher-cinematic-section");
+    const section = document.querySelector(".academy-odyssey-section");
     if (!section) return;
 
     const observer = new IntersectionObserver(([entry]) => {
-      setKingfisherVisible(entry.isIntersecting);
+      setImmersiveSectionVisible(entry.isIntersecting);
     });
     observer.observe(section);
 
@@ -145,7 +145,7 @@ export default function Navbar({
     }
   };
 
-  if (hideDuringKingfisher && kingfisherVisible) return null;
+  if (hideDuringKingfisher && immersiveSectionVisible) return null;
 
   return (
     <>
