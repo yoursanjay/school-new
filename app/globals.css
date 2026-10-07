@@ -49,6 +49,45 @@ body {
   font-family: var(--font-sans);
 }
 
+.aura-scroll-sequence {
+  font-family: var(--font-aura-inter), sans-serif;
+}
+
+.aura-scroll-sequence .font-mono {
+  font-family: var(--font-aura-inter), sans-serif;
+}
+
+.aura-accent-chip {
+  width: fit-content;
+  border-left: 2px solid #fff;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.375rem 0.75rem;
+  backdrop-filter: blur(12px);
+  font-family: var(--font-aura-inter), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.aura-scroll-sequence [data-aura-reveal] {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 700ms ease-out, transform 700ms ease-out;
+}
+
+.aura-scroll-sequence [data-aura-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-scroll-sequence [data-aura-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .about-section {
   width: 100%;
   max-width: 100%;
@@ -159,26 +198,6 @@ body {
   transition: object-position 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.kingfisher-video {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  pointer-events: none;
-  opacity: 0;
-  background: transparent;
-  transform: scale(1.04);
-  filter: saturate(1.15) contrast(1.04) brightness(0.96);
-  transition: opacity 220ms ease;
-}
-
-.kingfisher-video.is-visible {
-  opacity: 1;
-}
-
 .kingfisher-image-enter {
   animation: kingfisher-image-enter 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -229,25 +248,6 @@ body {
 
 .kingfisher-mono {
   font-family: var(--font-jetbrains-mono), "Courier New", monospace;
-}
-
-.kingfisher-branding {
-  position: absolute;
-  top: 24px;
-  left: clamp(24px, 5.3vw, 84px);
-  color: var(--ink);
-  font-size: 9px;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-}
-
-.kingfisher-branding::after {
-  display: block;
-  width: 100%;
-  height: 1px;
-  margin-top: 10px;
-  background: var(--line);
-  content: "";
 }
 
 .kingfisher-copy {
@@ -653,13 +653,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  .kingfisher-branding {
-    top: 18px;
-    left: 20px;
-    font-size: 8px;
-    letter-spacing: 0.12em;
-  }
-
   .kingfisher-word {
     top: 15vh;
     letter-spacing: -0.09em;

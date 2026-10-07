@@ -1,6 +1,6 @@
-import KingfisherSection from "@/components/KingfisherSection";
 import Navbar from "@/components/Navbar";
 import ScrollCanvasBackground from "@/components/ScrollCanvasBackground";
+import AuraPedagogySection from "@/components/sections/AuraPedagogy";
 import SchoolExperiencesSection from "@/components/sections/SchoolExperiences";
 import SchoolStorySection from "@/components/sections/SchoolStory";
 import SchoolFAQ from "@/components/school/SchoolFAQ";
@@ -17,7 +17,7 @@ export default function Home() {
         <section id="hero" className="frame-sequence relative">
           <ScrollCanvasBackground />
         </section>
-        <KingfisherSection />
+        <AuraPedagogySection />
         <SchoolExperiencesSection />
         <SchoolStorySection />
 

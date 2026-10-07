@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
-import { preconnect } from "react-dom";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -77,16 +76,11 @@ const PREVIEW_LABELS: Record<SceneId, readonly [string, string]> = {
 };
 
 export default function KingfisherSection() {
-  preconnect("https://thinkingods.com");
-
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
   const imageWrapRef = useRef<HTMLDivElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const wasVisibleRef = useRef(false);
   const currentProgressRef = useRef(0);
   const [activeScene, setActiveScene] = useState<SceneId>("campus");
-  const [videoReady, setVideoReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -196,159 +190,6 @@ export default function KingfisherSection() {
   }, []);
 
   useEffect(() => {
-    const stage = stageRef.current;
-    const video = videoRef.current;
-    if (!stage || !video) return;
-
-    const motionPreference = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
-    let reducedMotion = motionPreference.matches;
-    let pendingPlayback = false;
-    let playbackRequestId = 0;
-
-    const revealFinalFrame = () => {
-      if (
-        reducedMotion &&
-        Number.isFinite(video.duration) &&
-        video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA &&
-        video.currentTime >= video.duration
-      ) {
-        setVideoReady(true);
-      }
-    };
-
-    const showFinalFrame = () => {
-      video.pause();
-      if (!Number.isFinite(video.duration)) return;
-      video.currentTime = video.duration;
-      revealFinalFrame();
-    };
-
-    const startBirdAnimation = () => {
-      if (
-        !wasVisibleRef.current ||
-        !pendingPlayback ||
-        reducedMotion ||
-        video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA
-      ) {
-        return;
-      }
-
-      pendingPlayback = false;
-      const requestId = playbackRequestId;
-      video.play().then(
-        () => {
-          if (requestId === playbackRequestId) setVideoReady(true);
-        },
-        () => {
-          if (requestId === playbackRequestId) setVideoReady(false);
-        },
-      );
-    };
-
-    const handleCanPlay = () => startBirdAnimation();
-    const handleLoadedMetadata = () => {
-      if (reducedMotion) {
-        showFinalFrame();
-      } else if (!wasVisibleRef.current) {
-        video.pause();
-        video.currentTime = 0;
-      }
-    };
-    const handleLoadedData = () => {
-      startBirdAnimation();
-      revealFinalFrame();
-    };
-    const handleSeeked = () => {
-      revealFinalFrame();
-      startBirdAnimation();
-    };
-    const handleEnded = () => {
-      video.pause();
-      setVideoReady(true);
-    };
-    const handleError = () => {
-      video.pause();
-      setVideoReady(false);
-    };
-    const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
-      reducedMotion = event.matches;
-      if (reducedMotion) {
-        pendingPlayback = false;
-        playbackRequestId += 1;
-        showFinalFrame();
-      } else if (wasVisibleRef.current) {
-        video.pause();
-        video.currentTime = 0;
-        pendingPlayback = true;
-        playbackRequestId += 1;
-        startBirdAnimation();
-      } else {
-        video.pause();
-        video.currentTime = 0;
-        setVideoReady(false);
-      }
-    };
-
-    video.pause();
-    video.currentTime = 0;
-    video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    video.addEventListener("loadeddata", handleLoadedData);
-    video.addEventListener("canplay", handleCanPlay);
-    video.addEventListener("seeked", handleSeeked);
-    video.addEventListener("ended", handleEnded);
-    video.addEventListener("error", handleError);
-    motionPreference.addEventListener("change", handleMotionPreferenceChange);
-
-    if (reducedMotion) {
-      showFinalFrame();
-    } else if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-      startBirdAnimation();
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const isVisible =
-            entry.isIntersecting && entry.intersectionRatio >= 0.35;
-          if (isVisible === wasVisibleRef.current) return;
-
-          wasVisibleRef.current = isVisible;
-          playbackRequestId += 1;
-          if (isVisible && !reducedMotion) {
-            pendingPlayback = true;
-            video.pause();
-            video.currentTime = 0;
-            startBirdAnimation();
-          } else {
-            pendingPlayback = false;
-            video.pause();
-          }
-        });
-      },
-      { threshold: 0.35 },
-    );
-    observer.observe(stage);
-
-    return () => {
-      observer.disconnect();
-      wasVisibleRef.current = false;
-      motionPreference.removeEventListener(
-        "change",
-        handleMotionPreferenceChange,
-      );
-      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      video.removeEventListener("loadeddata", handleLoadedData);
-      video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("seeked", handleSeeked);
-      video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("error", handleError);
-      video.pause();
-    };
-  }, []);
-
-  useEffect(() => {
     const image = imageWrapRef.current?.querySelector("img");
     if (!image) return;
 
@@ -396,14 +237,6 @@ export default function KingfisherSection() {
             loading="lazy"
           />
 
-          <video
-            ref={videoRef}
-            className={`kingfisher-video${videoReady ? " is-visible" : ""}`}
-            src="https://thinkingods.com/demos/kingfisher-hero/hero.mp4"
-            muted
-            playsInline
-            preload="auto"
-          />
         </div>
 
         <div className="kingfisher-word-wrap" aria-hidden="true">
@@ -413,10 +246,6 @@ export default function KingfisherSection() {
         </div>
 
         <div className="kingfisher-ui">
-          <div className="kingfisher-branding kingfisher-mono">
-            <span>Sri Aurobindo Mira Universal School</span>
-          </div>
-
           <div className="kingfisher-copy">
             <div
               className="kingfisher-eyebrow kingfisher-mono"
