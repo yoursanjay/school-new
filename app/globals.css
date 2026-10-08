@@ -3188,11 +3188,11 @@ canvas {
   position: relative;
   display: flex;
   align-items: stretch;
+  justify-content: center;
   gap: 16px;
   height: clamp(420px, 31vw, 560px);
-  margin-top: clamp(360px, 50vh, 500px);
-  overflow-x: auto;
-  overflow-y: hidden;
+  margin-top: clamp(36px, 5vw, 72px);
+  overflow: hidden;
   scrollbar-width: none;
   container-type: inline-size;
 }
@@ -3204,6 +3204,7 @@ canvas {
 .school-experience-card {
   position: relative;
   flex: 0 0 auto;
+  height: 100%;
   min-width: 0;
   overflow: hidden;
   padding: 0;
@@ -3220,6 +3221,7 @@ canvas {
     border-color 0.28s ease,
     box-shadow 0.28s ease,
     filter 0.45s ease;
+  will-change: transform;
 }
 
 .school-experience-card:hover,
