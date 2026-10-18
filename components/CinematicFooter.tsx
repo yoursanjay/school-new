@@ -148,11 +148,11 @@ export default function CinematicFooter() {
           <Link className="footer-school-mark" href="/" aria-label="Back to home">
             <span className="footer-logo">
               <Image
-                src="/images/logo.png"
-                alt=""
-                width={54}
-                height={54}
-                sizes="54px"
+                src="/img/logo.png"
+                alt="Sri Aurobindo Mira Universal School"
+                width={800}
+                height={400}
+                sizes="132px"
               />
             </span>
             <span className="footer-school-name">

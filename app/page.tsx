@@ -3,11 +3,15 @@ import ScrollCanvasBackground from "@/components/ScrollCanvasBackground";
 import AcademyOdysseySection from "@/components/sections/AcademyOdyssey";
 import SchoolExperiencesSection from "@/components/sections/SchoolExperiences";
 import SchoolStorySection from "@/components/sections/SchoolStory";
+import HomeSchoolUpdateSection from "@/components/HomeSchoolUpdateSection";
+import WebsiteContentRevisionSection from "@/components/WebsiteContentRevisionSection";
+import HomeNewsUpdatesSection from "@/components/HomeNewsUpdatesSection";
+import NewsSection from "@/components/NewsSection";
+import ParentsTestimonialsSection from "@/components/ParentsTestimonialsSection";
 import SchoolFAQ from "@/components/school/SchoolFAQ";
-import SchoolFooter from "@/components/school/SchoolFooter";
-import SchoolJournal from "@/components/school/SchoolJournal";
-import SchoolTestimonials from "@/components/school/SchoolTestimonials";
+import HomeFooter from "@/components/HomeFooter";
 import { schoolMono, schoolSerif } from "@/components/school/typography";
+import SchoolJournal from "@/components/school/SchoolJournal";
 
 export default function Home() {
   return (
@@ -20,14 +24,17 @@ export default function Home() {
         <AcademyOdysseySection />
         <SchoolExperiencesSection />
         <SchoolStorySection />
-
+        <HomeSchoolUpdateSection />
+        <WebsiteContentRevisionSection />
+        <HomeNewsUpdatesSection />
         <div
           className={`school-sections ${schoolSerif.variable} ${schoolMono.variable}`}
         >
           <SchoolJournal />
-          <SchoolTestimonials />
+          <NewsSection />
+          <ParentsTestimonialsSection />
           <SchoolFAQ />
-          <SchoolFooter />
+          <HomeFooter />
         </div>
       </main>
     </>

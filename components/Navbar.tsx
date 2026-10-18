@@ -194,27 +194,25 @@ export default function Navbar({
             className="flex items-center gap-3 shrink-0 cursor-pointer group select-none"
             aria-label="Sri Aurobindo Mira Universal School Home"
           >
-            {/* Logo with gold accent ring */}
+            {/* School wordmark */}
             <div
-              className="relative w-[44px] h-[44px] rounded-full overflow-hidden p-0.5 bg-black/20 flex items-center justify-center transition-all duration-500 ease-out group-hover:scale-105"
+              className="relative w-[88px] sm:w-[128px] h-[44px] sm:h-[64px] shrink-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:scale-105"
               style={{
-                border: "1.5px solid rgba(244, 197, 66, 0.65)",
-                boxShadow: "0 0 10px rgba(244, 197, 66, 0.22)",
                 opacity: mounted ? 1 : 0,
                 transform: mounted ? "translateY(0)" : "translateY(-8px)",
                 transitionDelay: "50ms",
               }}
             >
               <img
-                src="/images/logo.png"
-                alt="Sri Aurobindo Mira Emblem"
+                src="/img/logo.png"
+                alt="Sri Aurobindo Mira Universal School"
                 className="w-full h-full object-contain"
               />
             </div>
 
             {/* School Name Typography */}
             <div
-              className="flex flex-col transition-all duration-500 ease-out"
+              className="hidden sm:flex flex-col transition-all duration-500 ease-out"
               style={{
                 opacity: mounted ? 1 : 0,
                 transform: mounted ? "translateX(0)" : "translateX(-10px)",

@@ -5,6 +5,7 @@ import SectionContainer from "./SectionContainer";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 import ImageReveal from "./ImageReveal";
+import styles from "./NewsSection.module.css";
 import { Calendar, Tag, ArrowRight, X } from "lucide-react";
 
 interface NewsItem {
@@ -59,81 +60,85 @@ export default function NewsSection() {
   return (
     <section
       id="news"
-      className="relative z-20 w-full bg-white text-[#0B1B33] overflow-hidden"
+      className={`${styles.section} news-section relative z-20 w-full text-[#0B1B33]`}
       style={{
         paddingTop: "clamp(80px, 8vw, 120px)",
         paddingBottom: "clamp(80px, 8vw, 120px)",
         borderTop: "1px solid rgba(11, 27, 51, 0.08)",
       }}
     >
-      <SectionContainer>
-        <SectionHeading
-          badge="LATEST NEWS & EVENTS"
-          title="Latest News & Events"
-          subtitle="Discover recent scholastic achievements, athletic triumphs, cultural showcases, and community milestones from our campus."
-          align="center"
-        />
+      <SectionContainer className={`${styles.container} relative z-10`}>
+        <div className={styles.contentColumn}>
+          <SectionHeading
+            badge="LATEST NEWS & EVENTS"
+            title="Latest News & Events"
+            subtitle="Discover recent scholastic achievements, athletic triumphs, cultural showcases, and community milestones from our campus."
+            align="center"
+            className="news-heading"
+          />
 
-        {/* 3 News Cards with Staggered Reveal */}
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-          {NEWS_ITEMS.map((item, idx) => (
-            <Reveal
-              key={item.id}
-              direction="up"
-              delay={idx * 120}
-              duration={650}
-              className="h-full"
-            >
-              <article className="group h-full rounded-[24px] overflow-hidden bg-[#F7F4EC]/60 border border-[#0B1B33]/10 shadow-sm hover:shadow-xl hover:border-[#C99732]/50 hover:-translate-y-1.5 transition-all duration-400 flex flex-col justify-between">
-                <div>
-                  {/* Image with clip-path reveal and hover scale */}
-                  <ImageReveal delay={idx * 120 + 40} duration={800}>
-                    <div className="relative h-60 w-full overflow-hidden bg-slate-200">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 block"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-[#0B1B33] flex items-center gap-1.5 shadow-sm border border-[#0B1B33]/10">
-                        <Tag className="w-3 h-3 text-[#C99732]" />
-                        <span>{item.category}</span>
+          {/* 3 News Cards with Staggered Reveal */}
+          <div className={`${styles.cardGrid} mt-14 grid w-full`}>
+            {NEWS_ITEMS.map((item, idx) => (
+              <Reveal
+                key={item.id}
+                direction="up"
+                delay={idx * 120}
+                duration={650}
+                className="news-card-reveal h-full"
+              >
+                <article className="group h-full rounded-[24px] overflow-hidden bg-[#F7F4EC] border border-[#0B1B33]/10 shadow-[0_18px_42px_rgba(11,27,51,0.16)] hover:shadow-xl hover:border-[#C99732]/50 hover:-translate-y-1.5 transition-all duration-400 flex flex-col justify-between">
+                  <div>
+                    {/* Image with clip-path reveal and hover scale */}
+                    <ImageReveal delay={idx * 120 + 40} duration={800} className="news-card-image">
+                      <div className="relative h-52 w-full overflow-hidden bg-slate-200">
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 block"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-[#0B1B33] flex items-center gap-1.5 shadow-sm border border-[#0B1B33]/10">
+                          <Tag className="w-3 h-3 text-[#C99732]" />
+                          <span>{item.category}</span>
+                        </div>
                       </div>
+                    </ImageReveal>
+
+                    {/* Body Content */}
+                    <div className="p-7">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-[#40556b] mb-3">
+                        <Calendar className="w-3.5 h-3.5 text-[#C99732]" />
+                        <span>{item.date}</span>
+                      </div>
+
+                      <h3 className="text-xl font-black text-[#0B1B33] group-hover:text-[#C99732] transition-colors leading-snug tracking-tight">
+                        {item.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm text-[#40556b] leading-relaxed font-normal">
+                        {item.description}
+                      </p>
                     </div>
-                  </ImageReveal>
-
-                  {/* Body Content */}
-                  <div className="p-7">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#667085] mb-3">
-                      <Calendar className="w-3.5 h-3.5 text-[#C99732]" />
-                      <span>{item.date}</span>
-                    </div>
-
-                    <h3 className="text-xl font-black text-[#0B1B33] group-hover:text-[#C99732] transition-colors leading-snug tracking-tight">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-3 text-sm text-[#667085] leading-relaxed font-normal">
-                      {item.description}
-                    </p>
                   </div>
-                </div>
 
-                {/* Read More Trigger */}
-                <div className="px-7 pb-7 pt-2 border-t border-[#0B1B33]/10">
-                  <button
-                    type="button"
-                    onClick={() => setActiveStory(item)}
-                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B1B33] group-hover:text-[#C99732] transition-colors cursor-pointer"
-                  >
-                    <span>Read More</span>
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                </div>
-              </article>
-            </Reveal>
-          ))}
+                  {/* Read More Trigger */}
+                  <div className="px-7 pb-7 pt-2 border-t border-[#0B1B33]/10">
+                    <button
+                      type="button"
+                      onClick={() => setActiveStory(item)}
+                      className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B1B33] group-hover:text-[#C99732] transition-colors cursor-pointer"
+                    >
+                      <span>Read More</span>
+                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </button>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
+
       </SectionContainer>
 
       {/* Story Lightbox Modal */}
@@ -177,6 +182,21 @@ export default function NewsSection() {
           </div>
         </div>
       )}
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          #news .news-card-reveal,
+          #news .news-card-image,
+          #news .group,
+          #news .group * {
+            opacity: 1 !important;
+            transform: none !important;
+            clip-path: none !important;
+            transition: none !important;
+            animation: none !important;
+            will-change: auto !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
