@@ -168,20 +168,20 @@ export default function Navbar({
       >
         {/* Main Floating Navbar Bar */}
         <div
-          className="pointer-events-auto relative flex items-center justify-between transition-all duration-300 ease-out"
+          className="pointer-events-auto relative flex items-center justify-between gap-6 transition-all duration-300 ease-out"
           style={{
             margin: "10px 18px",
             width: "calc(100% - 36px)",
             maxWidth: "1520px",
             height: "64px",
             borderRadius: "18px",
-            backgroundColor: "#1B2633",
+            backgroundColor: "#F8F9FA",
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
-            border: "1px solid rgba(255, 255, 255, 0.14)",
+            border: "1px solid rgba(0, 0, 0, 0.12)",
             boxShadow: isScrolled
-              ? "0 14px 44px rgba(0, 0, 0, 0.35)"
-              : "0 10px 40px rgba(0, 0, 0, 0.20)",
+              ? "0 6px 18px rgba(0, 0, 0, 0.14)"
+              : "0 4px 14px rgba(0, 0, 0, 0.12)",
             padding: "0 18px",
           }}
         >
@@ -212,7 +212,7 @@ export default function Navbar({
 
           {/* CENTER: Navigation Links (Desktop) */}
           <nav
-            className="hidden lg:flex items-center gap-1 xl:gap-2 transition-all duration-500 ease-out"
+            className="hidden lg:flex items-center gap-3 transition-all duration-500 ease-out"
             aria-label="Main Navigation"
             style={{
               opacity: mounted ? 1 : 0,
@@ -234,10 +234,10 @@ export default function Navbar({
                   key={item.id}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`group relative px-2.5 xl:px-3 py-1.5 text-[13px] font-medium tracking-wide transition-colors duration-200 select-none ${
+                  className={`group relative px-2.5 xl:px-3 py-1.5 text-[13px] font-bold tracking-wide transition-colors duration-200 select-none ${
                     isActive
-                      ? "text-[#F4C542]"
-                      : "text-white/88 hover:text-[#F4C542]"
+                      ? "text-[#111111]"
+                      : "text-[#111111] hover:text-[#111111]"
                   }`}
                 >
                   <span>{item.label}</span>
@@ -263,7 +263,7 @@ export default function Navbar({
 
           {/* RIGHT: Phone, Contact & Premium Apply CTA */}
           <div
-            className="flex items-center gap-3 sm:gap-4 transition-all duration-500 ease-out"
+            className="flex items-center gap-3 sm:gap-4 lg:gap-6 transition-all duration-500 ease-out"
             style={{
               opacity: mounted ? 1 : 0,
               transform: mounted ? "scale(1)" : "scale(0.96)",
@@ -273,9 +273,9 @@ export default function Navbar({
             {/* Phone link (Desktop only) */}
             <a
               href="tel:+919047077677"
-              className="hidden 2xl:inline-flex items-center gap-1.5 text-[12px] font-medium text-white/85 hover:text-[#F4C542] transition-colors duration-200"
+              className="hidden 2xl:inline-flex items-center gap-1.5 text-[12px] font-bold text-[#111111] hover:text-[#111111] transition-colors duration-200"
             >
-              <Phone className="w-3.5 h-3.5 text-[#F4C542]" />
+              <Phone className="w-3.5 h-3.5 text-[#111111]" />
               <span>+91 9047077677</span>
             </a>
 
@@ -283,10 +283,10 @@ export default function Navbar({
             <a
               href="/garden#contact"
               onClick={(e) => handleNavClick(e, "/garden#contact")}
-              className={`hidden sm:inline-flex text-[12.5px] font-medium px-2 py-1 transition-colors duration-200 ${
+              className={`hidden sm:inline-flex text-[12.5px] font-bold px-2 py-1 transition-colors duration-200 ${
                 activeSection === "contact"
-                  ? "text-[#F4C542]"
-                  : "text-white/85 hover:text-[#F4C542]"
+                  ? "text-[#111111]"
+                  : "text-[#111111] hover:text-[#111111]"
               }`}
             >
               Contact
@@ -296,9 +296,9 @@ export default function Navbar({
             <a
               href="/garden#admissions"
               onClick={(e) => handleNavClick(e, "/garden#admissions")}
-              className="inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-[#05121e] cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(244,197,66,0.30)] hover:shadow-[0_6px_22px_rgba(244,197,66,0.45)]"
+              className="inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-white cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(37,99,235,0.30)] hover:shadow-[0_6px_22px_rgba(37,99,235,0.45)]"
               style={{
-                background: "linear-gradient(135deg, #F4C542, #DFAE24)",
+                background: "#2563EB",
                 padding: "8px 16px",
               }}
             >
@@ -310,7 +310,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors"
+              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-black/10 bg-black/5 text-[#111111] hover:bg-black/10 transition-colors"
               aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileOpen}
             >
@@ -325,7 +325,7 @@ export default function Navbar({
             className="absolute bottom-0 left-0 right-0 h-[1px] pointer-events-none rounded-b-[18px]"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.6), transparent)",
+                "linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.18), transparent)",
               opacity: 0.35,
             }}
           />
@@ -334,9 +334,9 @@ export default function Navbar({
         {/* Mobile Dropdown Menu (<= 900px / lg) */}
         {mobileOpen && (
           <div
-            className="pointer-events-auto w-[calc(100%-36px)] max-w-[1520px] rounded-[18px] border border-white/14 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.5)] transition-all duration-300 animate-in fade-in slide-in-from-top-3 lg:hidden"
+            className="pointer-events-auto w-[calc(100%-36px)] max-w-[1520px] rounded-[18px] border border-black/10 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.15)] transition-all duration-300 animate-in fade-in slide-in-from-top-3 lg:hidden"
             style={{
-              backgroundColor: "rgba(5, 18, 30, 0.97)",
+              backgroundColor: "rgba(248, 249, 250, 0.98)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
             }}
@@ -355,10 +355,10 @@ export default function Navbar({
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-200 ${
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all duration-200 ${
                       isActive
-                        ? "text-[#F4C542] bg-white/10 font-bold"
-                        : "text-white/88 hover:text-[#F4C542] hover:bg-white/5"
+                        ? "text-[#111111] bg-black/5 font-bold"
+                        : "text-[#111111] hover:text-[#111111] hover:bg-black/5"
                     }`}
                     style={{
                       animationDelay: `${idx * 40}ms`,
@@ -375,27 +375,27 @@ export default function Navbar({
               <a
                 href="/garden#contact"
                 onClick={(e) => handleNavClick(e, "/garden#contact")}
-                className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-medium text-white/88 hover:text-[#F4C542] hover:bg-white/5"
+                className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold text-[#111111] hover:text-[#111111] hover:bg-black/5"
               >
                 <span>Contact</span>
               </a>
             </nav>
 
-            <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-2.5">
+            <div className="mt-4 pt-4 border-t border-black/10 flex flex-col gap-2.5">
               <a
                 href="tel:+919047077677"
-                className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-white/15 text-white/90 text-[13px] font-medium bg-white/5 hover:bg-white/10"
+                className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-black/10 text-[#111111] text-[13px] font-bold bg-black/5 hover:bg-black/10"
               >
-                <Phone className="w-4 h-4 text-[#F4C542]" />
+                <Phone className="w-4 h-4 text-[#111111]" />
                 <span>+91 9047077677</span>
               </a>
 
               <a
                 href="/garden#admissions"
                 onClick={(e) => handleNavClick(e, "/garden#admissions")}
-                className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-[13px] font-bold text-[#05121e] shadow-md"
+                className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-[13px] font-bold text-white shadow-md"
                 style={{
-                  background: "linear-gradient(135deg, #F4C542, #DFAE24)",
+                  background: "#2563EB",
                 }}
               >
                 <span>Apply For Admission ↗</span>

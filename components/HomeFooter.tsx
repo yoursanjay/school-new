@@ -77,7 +77,7 @@ export default function HomeFooter() {
 
           <div className="home-footer__student-art" aria-hidden="true">
             <Image
-              src="/img/footerimg.png"
+                src="/img/footerimg.png?v=20261020"
               alt=""
               width={1672}
               height={941}
@@ -105,8 +105,8 @@ export default function HomeFooter() {
           isolation: isolate;
           min-height: 760px;
           overflow: hidden;
-          background: #1B2633;
-          color: #f5f0e5;
+          background: #F8F9FA;
+          color: #111111;
         }
 
         .home-footer__grid-pattern {
@@ -166,8 +166,8 @@ export default function HomeFooter() {
           padding: 34px 30px 32px;
           border: 1px solid rgba(212, 218, 171, 0.2);
           border-radius: 5px;
-          background: #123e34;
-          box-shadow: 0 18px 36px rgba(2, 19, 15, 0.2);
+          background: #ffffff;
+          box-shadow: 0 18px 36px rgba(17, 17, 17, 0.08);
         }
 
         .home-footer__label {
@@ -189,7 +189,7 @@ export default function HomeFooter() {
           flex-wrap: wrap;
           align-items: center;
           gap: 12px;
-          color: #fffaf0;
+          color: #111111;
           font-size: 1rem;
           font-weight: 700;
           line-height: 1.2;
@@ -214,7 +214,7 @@ export default function HomeFooter() {
           display: flex;
           align-items: flex-start;
           gap: 12px;
-          color: rgba(245, 240, 229, 0.8);
+          color: rgba(17, 17, 17, 0.8);
           font-size: 0.86rem;
           line-height: 1.5;
           text-decoration: none;
@@ -252,7 +252,7 @@ export default function HomeFooter() {
 
         .home-footer__story h2 {
           margin: 0;
-          color: #fffaf0;
+          color: #111111;
           font-family: Georgia, "Times New Roman", serif;
           font-size: clamp(2.35rem, 3.2vw, 3.15rem);
           font-weight: 700;
@@ -287,7 +287,7 @@ export default function HomeFooter() {
         }
 
         .home-footer__link-groups a {
-          color: rgba(245, 240, 229, 0.75);
+          color: rgba(17, 17, 17, 0.75);
           font-size: 0.9rem;
           line-height: 1.4;
           text-decoration: none;
@@ -321,7 +321,7 @@ export default function HomeFooter() {
           gap: 24px;
           padding-top: 20px;
           border-top: 1px solid rgba(205, 220, 181, 0.24);
-          color: rgba(245, 240, 229, 0.58);
+          color: rgba(17, 17, 17, 0.58);
           font-size: 0.76rem;
           line-height: 1.5;
         }
@@ -336,7 +336,7 @@ export default function HomeFooter() {
         }
 
         .home-footer__bottom a {
-          color: rgba(245, 240, 229, 0.68);
+          color: rgba(17, 17, 17, 0.68);
           text-decoration: none;
           transition: color 160ms ease;
         }
