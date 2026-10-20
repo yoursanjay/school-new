@@ -23,13 +23,13 @@ export default function Home() {
         </section>
         <AcademyOdysseySection />
         <SchoolExperiencesSection />
-        <SchoolStorySection />
         <HomeSchoolUpdateSection />
         <WebsiteContentRevisionSection />
         <HomeNewsUpdatesSection />
         <div
           className={`school-sections ${schoolSerif.variable} ${schoolMono.variable}`}
         >
+          <SchoolStorySection />
           <SchoolJournal />
           <NewsSection />
           <ParentsTestimonialsSection />

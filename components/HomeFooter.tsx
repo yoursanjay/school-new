@@ -105,7 +105,7 @@ export default function HomeFooter() {
           isolation: isolate;
           min-height: 760px;
           overflow: hidden;
-          background: #05121e;
+          background: #1B2633;
           color: #f5f0e5;
         }
 

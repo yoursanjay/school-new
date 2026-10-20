@@ -59,7 +59,7 @@ export default function HomeNewsUpdatesSection() {
 
         <figure className={styles.figure}>
           <div className={styles.imageFrame}>
-            <Image src="/img/footer.png" alt="Students smiling together" width={1672} height={941} sizes="(max-width: 800px) 100vw, 42vw" />
+            <Image src="/img/s6.png" alt="Students smiling together" width={1672} height={941} sizes="(max-width: 800px) 100vw, 42vw" />
           </div>
           <figcaption className={styles.caption}>
             <strong>Learn. Explore. Achieve.</strong>

@@ -465,7 +465,7 @@ export default function AcademyOdysseySection() {
 
       <Image
         id="floating-logo"
-        src="/images/logo.png"
+        src="/img/logo.png"
         alt="Sri Aurobindo Mira Universal School crest"
         width={59}
         height={58}

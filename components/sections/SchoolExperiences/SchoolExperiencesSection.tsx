@@ -12,7 +12,7 @@ const experiences: SchoolExperience[] = [
     description:
       "A learning environment where students question, explore and discover with purpose.",
     cta: "EXPLORE",
-    image: "/images/digital-classroom.jpg",
+    image: "/img/s1.png",
     imageAlt: "Students learning together in a modern classroom",
   },
   {
@@ -21,7 +21,7 @@ const experiences: SchoolExperience[] = [
     description:
       "Sport builds discipline, teamwork, resilience and the confidence to keep moving forward.",
     cta: "EXPLORE",
-    image: "/images/sports.jpg",
+    image: "/img/s2.png",
     imageAlt: "Students playing sport and building confidence",
   },
   {
@@ -30,7 +30,7 @@ const experiences: SchoolExperience[] = [
     description:
       "Art, music and creative expression give every student space to discover their own voice.",
     cta: "EXPLORE",
-    image: "/images/arts.jpg",
+    image: "/img/s3.png",
     imageAlt: "Students engaged in creative arts and expression",
   },
   {
@@ -39,7 +39,7 @@ const experiences: SchoolExperience[] = [
     description:
       "Technology and hands-on exploration turn curiosity into ideas, skills and possibilities.",
     cta: "EXPLORE",
-    image: "/images/innovation.jpg",
+    image: "/img/s4.png",
     imageAlt: "Students using technology and STEM equipment to build ideas",
   },
   {
@@ -48,7 +48,7 @@ const experiences: SchoolExperience[] = [
     description:
       "Students grow through responsibility, collaboration and experiences that prepare them for the future.",
     cta: "EXPLORE",
-    image: "/images/student-life.jpg",
+    image: "/img/s5.png",
     imageAlt: "Students collaborating and leading together",
   },
 ];

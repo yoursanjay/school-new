@@ -46,7 +46,7 @@ export default function ParentsTestimonialsSection() {
         <header className={styles.branding}>
           <Image
             className={styles.logo}
-            src="/images/logo.png"
+            src="/img/logo.png"
             alt="Sri Aurobindo Mira Universal School emblem"
             width={76}
             height={76}

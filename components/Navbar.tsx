@@ -175,9 +175,7 @@ export default function Navbar({
             maxWidth: "1520px",
             height: "64px",
             borderRadius: "18px",
-            backgroundColor: isScrolled
-              ? "rgba(5, 18, 30, 0.94)"
-              : "rgba(8, 24, 40, 0.70)",
+            backgroundColor: "#1B2633",
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
             border: "1px solid rgba(255, 255, 255, 0.14)",
@@ -210,22 +208,6 @@ export default function Navbar({
               />
             </div>
 
-            {/* School Name Typography */}
-            <div
-              className="hidden sm:flex flex-col transition-all duration-500 ease-out"
-              style={{
-                opacity: mounted ? 1 : 0,
-                transform: mounted ? "translateX(0)" : "translateX(-10px)",
-                transitionDelay: "100ms",
-              }}
-            >
-              <span className="text-[13px] sm:text-[14px] font-extrabold tracking-tight text-white leading-tight uppercase">
-                Sri Aurobindo Mira
-              </span>
-              <span className="text-[9px] sm:text-[10px] font-semibold tracking-[0.18em] uppercase text-[#F4C542]">
-                Universal School • CBSE
-              </span>
-            </div>
           </Link>
 
           {/* CENTER: Navigation Links (Desktop) */}

@@ -28,7 +28,7 @@ const NEWS_ITEMS: NewsItem[] = [
       "A thrilling display of track and field events, teamwork, and sportsman spirit across houses with our newly inaugurated synthetic track.",
     fullStory:
       "The Annual Sports Meet at Sri Aurobindo Mira brought together hundreds of energetic student athletes across all grade levels. Events included 100m/400m sprint championships, high jump, relay matches, and a grand march past led by the school student council. Dignitaries and coaches commended our athletes for their discipline and sporting ethics.",
-    imageUrl: "/images/school/sports.jpg",
+    imageUrl: "/img/s7.png",
   },
   {
     id: "news-awards",
@@ -39,7 +39,7 @@ const NEWS_ITEMS: NewsItem[] = [
       "Celebrating exceptional CBSE scholastic milestones, subject centum toppers, and research innovators who demonstrate exemplary dedication.",
     fullStory:
       "Our annual Academic Honours Convocation recognized high achievers in CBSE secondary and senior secondary programs. Over 45 scholars received gold distinction pins for securing top ranks in national olympiads, conceptual mathematics, and collaborative literature essays, celebrating continuous intellectual growth.",
-    imageUrl: "/images/school/students.jpg",
+    imageUrl: "/img/s8.png",
   },
   {
     id: "news-science",
@@ -50,7 +50,7 @@ const NEWS_ITEMS: NewsItem[] = [
       "Student scientists showcased working AI robotics models, renewable energy prototypes, and space exploration research projects in our campus lab.",
     fullStory:
       "The Science & Innovation Exhibition transformed our school STEM wing into an interactive research hub. Students from Middle and Senior School presented over 60 working working models, spanning automated drip irrigation, astrophysics telemetry, drone technology, and bio-degradable polymer alternatives.",
-    imageUrl: "/images/school/science.jpg",
+    imageUrl: "/img/s9.png",
   },
 ];
 
