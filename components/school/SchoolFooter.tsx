@@ -1,8 +1,8 @@
 const contactDetails = {
-  phone: "+91 90470 77677",
+  phone: "90470 77677",
   phoneHref: "tel:+919047077677",
-  email: "info@school.edu",
-  address: "Keelamathur, Melakkal Main Road, Madurai – 625016, Tamil Nadu",
+  email: "universal@sriaurobindomira.org",
+  address: "School @ Melakkal Main Road, Keelamathur, Madurai - 625 019.",
   whatsappHref: "https://wa.me/919047077677",
 };
 

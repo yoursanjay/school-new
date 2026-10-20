@@ -190,18 +190,18 @@ export default function CinematicFooter() {
           <a href="https://maps.google.com/?q=Sri+Aurobindo+Mira+Universal+School+Madurai">
             <MapPin aria-hidden="true" />
             <span>
-              Keelamathur, Melakkal Main Road,
+              School @ Melakkal Main Road, Keelamathur,
               <br />
-              Madurai – 625016, Tamil Nadu
+              Madurai - 625 019.
             </span>
           </a>
           <a href="tel:+919047077677">
             <Phone aria-hidden="true" />
-            <span>+91 90470 77677</span>
+            <span>90470 77677</span>
           </a>
-          <a href="mailto:info@school.edu">
+          <a href="mailto:universal@sriaurobindomira.org">
             <Mail aria-hidden="true" />
-            <span>info@school.edu</span>
+            <span>universal@sriaurobindomira.org</span>
           </a>
         </address>
       </div>

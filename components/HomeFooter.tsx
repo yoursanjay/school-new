@@ -35,18 +35,20 @@ export default function HomeFooter() {
               />
             </Link>
 
+            <p className="home-footer__unit-name">UNI</p>
+
             <div className="home-footer__contact-list">
               <a href="tel:+919047077677">
                 <Phone aria-hidden="true" />
-                <span>+91 90470 77677</span>
+                <span>90470 77677</span>
               </a>
-              <a href="mailto:info@school.edu">
+              <a href="mailto:universal@sriaurobindomira.org">
                 <Mail aria-hidden="true" />
-                <span>info@school.edu</span>
+                <span>universal@sriaurobindomira.org</span>
               </a>
-              <a href="https://maps.google.com/?q=Sri+Aurobindo+Mira+Universal+School+Madurai">
+              <a href="https://maps.google.com/?q=School+Melakkal+Main+Road+Keelamathur+Madurai+625+019">
                 <MapPin aria-hidden="true" />
-                <span>Keelamathur, Melakkal Main Road, Madurai – 625016, Tamil Nadu</span>
+                <span>School @ Melakkal Main Road, Keelamathur, Madurai - 625 019.</span>
               </a>
             </div>
           </section>
@@ -90,8 +92,8 @@ export default function HomeFooter() {
         <div className="home-footer__bottom">
           <p>© {new Date().getFullYear()} Sri Aurobindo Mira Universal School. All rights reserved.</p>
           <div className="home-footer__bottom-links">
-            <a href="mailto:info@school.edu?subject=Privacy%20Policy">Privacy Policy</a>
-            <a href="mailto:info@school.edu?subject=Terms%20of%20Use">Terms of Use</a>
+            <a href="mailto:universal@sriaurobindomira.org?subject=Privacy%20Policy">Privacy Policy</a>
+            <a href="mailto:universal@sriaurobindomira.org?subject=Terms%20of%20Use">Terms of Use</a>
             <a className="home-footer__top-link" href="#hero">
               Back to top <ArrowUp aria-hidden="true" />
             </a>
@@ -210,9 +212,18 @@ export default function HomeFooter() {
           margin-top: 38px;
         }
 
+        .home-footer__unit-name {
+          margin: 14px 0 -20px;
+          color: #173b2e;
+          font-size: 0.76rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          line-height: 1;
+        }
+
         .home-footer__contact-list a {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           gap: 12px;
           color: rgba(17, 17, 17, 0.8);
           font-size: 0.86rem;
@@ -232,6 +243,8 @@ export default function HomeFooter() {
           color: #e2bc45;
           stroke-width: 1.7;
         }
+
+        .home-footer__contact-list a:last-child { align-items: flex-start; }
 
         .home-footer__story {
           position: relative;
@@ -357,7 +370,7 @@ export default function HomeFooter() {
             gap: 32px;
             min-height: 520px;
           }
-          .home-footer__contact-card { grid-column: 1; grid-row: 1 / span 2; align-self: center; }
+        .home-footer__contact-card { grid-column: 1; grid-row: 1 / span 2; align-self: center; }
           .home-footer__story { grid-column: 2; }
           .home-footer__story h2 { font-size: clamp(2.45rem, 5vw, 3.5rem); }
           .home-footer__student-art {
