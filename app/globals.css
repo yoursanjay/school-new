@@ -3530,6 +3530,13 @@ canvas {
 
 .school-story-photo-card img {
   object-fit: cover;
+  transition: transform 350ms ease, filter 350ms ease;
+}
+
+.school-story-photo-card:hover img,
+.school-story-photo-card:focus-visible img {
+  transform: scale(1.045);
+  filter: brightness(1.08) saturate(1.08);
 }
 
 .school-story-photo-caption {
@@ -3550,7 +3557,7 @@ canvas {
 
 .school-story-center {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   top: 50%;
   left: 50%;
   width: min(290px, calc(100% - 36px));
@@ -3563,6 +3570,11 @@ canvas {
   transform: translate(-50%, -50%);
   pointer-events: auto;
   backdrop-filter: blur(5px);
+}
+
+.school-story-center:focus-visible {
+  outline: 2px solid var(--school-orange);
+  outline-offset: 4px;
 }
 
 .school-story-center-category {
@@ -4123,6 +4135,52 @@ canvas {
     gap: 34px;
   }
 
+  .school-journal-3d-stage {
+    display: flex;
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+    gap: 18px;
+    overflow: visible;
+    perspective: none;
+  }
+
+  .school-story-3d-world {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    transform: none !important;
+  }
+
+  .school-story-3d-halo {
+    display: none;
+  }
+
+  .school-story-photo-card {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    transition-delay: 0ms !important;
+  }
+
+  .school-story-center {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    transform: none;
+  }
+
+  .school-story-back-button {
+    position: relative;
+    inset: auto;
+    align-self: center;
+    transform: none;
+  }
+
   .school-story-image {
     aspect-ratio: 1.32;
   }
@@ -4247,6 +4305,8 @@ canvas {
 
   .school-story-image img,
   .school-testimonial-image img,
+  .school-story-photo-card,
+  .school-story-photo-card img,
   .school-story-link span,
   .school-footer-primary,
   .school-testimonial-tabs button {

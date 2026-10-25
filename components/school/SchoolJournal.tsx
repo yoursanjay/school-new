@@ -10,7 +10,7 @@ const stories = [
     description:
       "How curiosity, collaboration, and hands-on experiences help students turn knowledge into understanding.",
     date: "12 SEP 2026",
-    image: "/images/school/classroom.jpg",
+    image: "/img/ac1.jpg",
     imageAlt: "Students learning together in a bright classroom",
     href: "/garden#academics",
   },
@@ -20,7 +20,7 @@ const stories = [
     description:
       "From morning classrooms to shared spaces, explore the experiences that make everyday school life meaningful.",
     date: "05 SEP 2026",
-    image: "/images/school/students.jpg",
+    image: "/img/ac2.jpg",
     imageAlt: "Students sharing a moment at school",
     href: "/garden#student-life",
   },
@@ -30,7 +30,7 @@ const stories = [
     description:
       "Recognising the dedication, creativity, confidence, and growth of our students.",
     date: "28 AUG 2026",
-    image: "/images/school/arts.jpg",
+    image: "/img/ac3.jpg",
     imageAlt: "Students taking part in a school arts event",
     href: "/garden#gallery",
   },
@@ -56,25 +56,25 @@ const storyPhotos = [
     storyIndex: 2,
   },
   {
-    image: "/images/school/campus.jpg",
+    image: "/img/ADS_0988.JPG",
     imageAlt: "The school's campus and outdoor spaces",
     label: "Our campus",
     storyIndex: 1,
   },
   {
-    image: "/images/school/library.jpg",
+    image: "/img/ADS_1020.JPG",
     imageAlt: "Books and learning resources in the school library",
     label: "The school library",
     storyIndex: 0,
   },
   {
-    image: "/images/school/science.jpg",
+    image: "/img/ADS_1082.JPG",
     imageAlt: "Students exploring science at school",
     label: "Curiosity in action",
     storyIndex: 0,
   },
   {
-    image: "/images/school/sports.jpg",
+    image: "/img/ADS_1220.JPG",
     imageAlt: "Students taking part in school sports",
     label: "Learning through play",
     storyIndex: 2,
@@ -98,6 +98,7 @@ const clamp = (value: number, min: number, max: number) =>
 
 export default function SchoolJournal() {
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const [isRadialGalleryOpen, setIsRadialGalleryOpen] = useState(false);
   const dragStateRef = useRef({
     active: false,
     x: 0,
@@ -284,10 +285,16 @@ export default function SchoolJournal() {
           <div
             ref={stageRef}
             className="school-journal-3d-stage"
+            data-radial-gallery={isRadialGalleryOpen}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={stopDragging}
             onPointerCancel={stopDragging}
+            onPointerLeave={(event) => {
+              if (event.pointerType === "mouse") {
+                setIsRadialGalleryOpen(false);
+              }
+            }}
           >
             <div
               className="school-story-3d-world"
@@ -306,6 +313,11 @@ export default function SchoolJournal() {
                 const brightness = 0.68 + depthRatio * 0.42;
                 const isSelected = selectedPhotoIndex === index;
                 const scale = isSelected ? 1.18 : 0.82 + depthRatio * 0.2;
+                const orbitAngle =
+                  (index / storyPhotos.length) * Math.PI * 2 - Math.PI / 2;
+                const orbitX = Math.cos(orbitAngle) * sphereRadius * 1.55;
+                const orbitY = Math.sin(orbitAngle) * sphereRadius * 0.9;
+                const orbitScale = 0.96 + depthRatio * 0.08;
 
                 return (
                   <button
@@ -317,12 +329,17 @@ export default function SchoolJournal() {
                     style={{
                       transform: isSelected
                         ? `translate3d(-50%, -50%, ${sphereRadius + 100}px) scale(${scale})`
-                        : `translate3d(-50%, -50%, 0) translate3d(${position.x * sphereRadius}px, ${-position.y * sphereRadius}px, ${position.z * sphereRadius}px) scale(${scale})`,
+                        : isRadialGalleryOpen
+                          ? `translate3d(-50%, -50%, 45px) translate3d(${orbitX}px, ${orbitY}px, 0) scale(${orbitScale})`
+                          : `translate3d(-50%, -50%, 0) translate3d(${position.x * sphereRadius}px, ${-position.y * sphereRadius}px, ${position.z * sphereRadius}px) scale(${scale})`,
                       opacity: isSelected ? 1 : 0.5 + depthRatio * 0.5,
                       filter: isSelected
                         ? "brightness(1.08) saturate(1.1)"
-                        : `brightness(${brightness}) saturate(${0.82 + depthRatio * 0.28})`,
+                        : isRadialGalleryOpen
+                          ? "brightness(1.08) saturate(1.05)"
+                          : `brightness(${brightness}) saturate(${0.82 + depthRatio * 0.28})`,
                       zIndex: isSelected ? 3 : undefined,
+                      transitionDelay: `${isRadialGalleryOpen ? index * 45 : (storyPhotos.length - index - 1) * 35}ms`,
                     }}
                     onClick={(event) => {
                       if (event.detail === 0) {
@@ -344,7 +361,48 @@ export default function SchoolJournal() {
               })}
             </div>
             {selectedPhotoIndex === null ? (
-              <div className="school-story-center">
+              <div
+                className="school-story-center"
+                onPointerEnter={(event) => {
+                  if (
+                    event.pointerType === "mouse" &&
+                    stageRef.current &&
+                    stageRef.current.clientWidth > 620
+                  ) {
+                    setIsRadialGalleryOpen(true);
+                  }
+                }}
+                onClick={(event) => {
+                  if (
+                    event.target instanceof HTMLElement &&
+                    event.target.closest("a")
+                  ) {
+                    return;
+                  }
+
+                  if (
+                    event.detail !== 0 &&
+                    stageRef.current &&
+                    stageRef.current.clientWidth > 620 &&
+                    window.matchMedia("(pointer: coarse)").matches
+                  ) {
+                    setIsRadialGalleryOpen((open) => !open);
+                  }
+                }}
+                onKeyDown={(event) => {
+                  if (
+                    stageRef.current &&
+                    stageRef.current.clientWidth > 620 &&
+                    (event.key === "Enter" || event.key === " ")
+                  ) {
+                    event.preventDefault();
+                    setIsRadialGalleryOpen((open) => !open);
+                  }
+                }}
+                role="group"
+                aria-label="Featured school story. Activate to arrange photos."
+                tabIndex={0}
+              >
               <p className="school-story-center-category school-mono">
                 {activeStory.category} · {activeStory.date}
               </p>
