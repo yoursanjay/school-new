@@ -50,7 +50,7 @@ export default function SchoolStorySection() {
     >
       <div className={styles.background} aria-hidden="true">
         <Image
-          src="/img/bg.png"
+          src="/img/bg.JPG"
           alt=""
           fill
           sizes="100vw"

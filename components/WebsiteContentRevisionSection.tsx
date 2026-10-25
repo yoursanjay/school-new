@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./WebsiteContentRevisionSection.module.css";
 
@@ -78,6 +79,14 @@ export default function WebsiteContentRevisionSection() {
       aria-labelledby="content-revision-title"
       data-visible={isVisible}
     >
+      <div className={styles.studentImage} aria-hidden="true">
+        <Image
+          src="/img/bg2.png"
+          alt=""
+          fill
+          sizes="(max-width: 900px) 100vw, 48vw"
+        />
+      </div>
       <div className={styles.container}>
         <div className={styles.panel}>
           <header className={styles.header}>

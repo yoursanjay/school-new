@@ -79,7 +79,7 @@ export default function HomeFooter() {
 
           <div className="home-footer__student-art" aria-hidden="true">
             <Image
-                src="/img/footerimg.png?v=20261020"
+                src="/img/footerimg.png"
               alt=""
               width={1672}
               height={941}

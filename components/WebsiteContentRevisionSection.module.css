@@ -1,13 +1,24 @@
 .section {
   position: relative;
+  display: flex;
+  flex-direction: column;
   isolation: isolate;
   width: 100%;
   overflow: hidden;
   background-color: #168c39;
-  background-image: url("/img/bg2.png");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+}
+
+.studentImage {
+  position: absolute;
+  inset: 50% auto auto 0;
+  width: 50%;
+  height: min(85vh, 850px);
+  transform: translateY(-50%);
+}
+
+.studentImage img {
+  object-fit: cover;
+  object-position: left center;
 }
 
 .container {
@@ -18,10 +29,12 @@
   justify-content: flex-end;
   margin: 0 auto;
   padding: clamp(56px, 7vw, 96px) 0;
+  position: relative;
 }
 
 .panel {
-  width: min(790px, 62%);
+  width: min(700px, 48%);
+  margin-left: auto;
   padding: clamp(28px, 3.2vw, 46px);
   border: 1px solid rgba(255, 255, 255, 0.76);
   border-radius: 28px;
@@ -126,24 +139,40 @@
 }
 
 @media (max-width: 900px) {
+  .section {
+    gap: 0;
+  }
+
+  .studentImage {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    transform: none;
+  }
+
+  .studentImage img {
+    object-position: center;
+  }
+
   .container {
     min-height: 0;
     width: min(760px, calc(100% - 40px));
     justify-content: center;
-    padding: 52px 0;
+    padding: 28px 0 40px;
   }
 
-  .panel { width: 100%; }
+  .panel {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 600px) {
-  .section {
-    background-position: 28% center;
-  }
-
   .container {
     width: calc(100% - 28px);
-    padding: 28px 0;
+    padding: 22px 0;
   }
 
   .panel {
