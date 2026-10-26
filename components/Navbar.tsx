@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Phone } from "lucide-react";
+import { Phone, UserRound } from "lucide-react";
 
 interface NavItem {
   label: string;
@@ -25,6 +25,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Garden", href: "/garden", id: "garden" },
   { label: "Admissions", href: "/garden#admissions", id: "admissions" },
 ];
+
+const SHOW_EXTENDED_NAVIGATION = false;
 
 export default function Navbar({
   hideDuringKingfisher = false,
@@ -150,17 +152,19 @@ export default function Navbar({
   return (
     <>
       {/* Top subtle Gold Scroll Progress Bar */}
-      <div
-        className="fixed top-0 left-0 right-0 h-[2.5px] z-[10001] pointer-events-none transition-opacity duration-300"
-        style={{
-          opacity: scrollProgress > 0 ? 1 : 0,
-        }}
-      >
+      {SHOW_EXTENDED_NAVIGATION && (
         <div
-          className="h-full bg-gradient-to-r from-[#F4C542] via-[#ffe28a] to-[#F4C542] shadow-[0_0_8px_rgba(244,197,66,0.6)]"
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
+          className="fixed top-0 left-0 right-0 h-[2.5px] z-[10001] pointer-events-none transition-opacity duration-300"
+          style={{
+            opacity: scrollProgress > 0 ? 1 : 0,
+          }}
+        >
+          <div
+            className="h-full bg-gradient-to-r from-[#F4C542] via-[#ffe28a] to-[#F4C542] shadow-[0_0_8px_rgba(244,197,66,0.6)]"
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
+      )}
 
       {/* Floating Header Container */}
       <header
@@ -212,7 +216,7 @@ export default function Navbar({
 
           {/* CENTER: Navigation Links (Desktop) */}
           <nav
-            className="hidden lg:flex items-center gap-3 transition-all duration-500 ease-out"
+            className="flex flex-1 items-center justify-center gap-3 transition-all duration-500 ease-out"
             aria-label="Main Navigation"
             style={{
               opacity: mounted ? 1 : 0,
@@ -220,7 +224,9 @@ export default function Navbar({
               transitionDelay: "150ms",
             }}
           >
-            {NAV_ITEMS.map((item) => {
+            {NAV_ITEMS.filter(
+              (item) => item.label === "Home" || SHOW_EXTENDED_NAVIGATION,
+            ).map((item) => {
               const isActive =
                 (item.id === "hero" && pathname === "/") ||
                 (item.id === "garden" && pathname === "/garden") ||
@@ -270,54 +276,70 @@ export default function Navbar({
               transitionDelay: "200ms",
             }}
           >
-            {/* Phone link (Desktop only) */}
             <a
-              href="tel:+919047077677"
-              className="hidden 2xl:inline-flex items-center gap-1.5 text-[12px] font-bold text-[#111111] hover:text-[#111111] transition-colors duration-200"
+              href="https://app.stppeify.com/"
+              aria-label="Login"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#111111] transition-colors duration-200 hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c99738]"
             >
-              <Phone className="w-3.5 h-3.5 text-[#111111]" />
-              <span>+91 9047077677</span>
+              <UserRound className="h-5 w-5" aria-hidden="true" />
             </a>
 
-            {/* Contact link (Desktop only) */}
-            <a
-              href="/garden#contact"
-              onClick={(e) => handleNavClick(e, "/garden#contact")}
-              className={`hidden sm:inline-flex text-[12.5px] font-bold px-2 py-1 transition-colors duration-200 ${
-                activeSection === "contact"
-                  ? "text-[#111111]"
-                  : "text-[#111111] hover:text-[#111111]"
-              }`}
-            >
-              Contact
-            </a>
+            {SHOW_EXTENDED_NAVIGATION && (
+              <>
+                {/* Phone link (Desktop only) */}
+                <a
+                  href="tel:+919047077677"
+                  className="hidden 2xl:inline-flex items-center gap-1.5 text-[12px] font-bold text-[#111111] hover:text-[#111111] transition-colors duration-200"
+                >
+                  <Phone className="w-3.5 h-3.5 text-[#111111]" />
+                  <span>+91 9047077677</span>
+                </a>
 
-            {/* Premium Apply Now CTA Button */}
-            <a
-              href="/garden#admissions"
-              onClick={(e) => handleNavClick(e, "/garden#admissions")}
-              className="inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-white cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(37,99,235,0.30)] hover:shadow-[0_6px_22px_rgba(37,99,235,0.45)]"
-              style={{
-                background: "#2563EB",
-                padding: "8px 16px",
-              }}
-            >
-              <span>Apply Now</span>
-              <span className="font-bold text-[13px] leading-none">↗</span>
-            </a>
+                {/* Contact link (Desktop only) */}
+                <a
+                  href="/garden#contact"
+                  onClick={(e) => handleNavClick(e, "/garden#contact")}
+                  className={`hidden sm:inline-flex text-[12.5px] font-bold px-2 py-1 transition-colors duration-200 ${
+                    activeSection === "contact"
+                      ? "text-[#111111]"
+                      : "text-[#111111] hover:text-[#111111]"
+                  }`}
+                >
+                  Contact
+                </a>
 
-            {/* Mobile Hamburger Toggle Button */}
-            <button
-              type="button"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-black/10 bg-black/5 text-[#111111] hover:bg-black/10 transition-colors"
-              aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-              aria-expanded={mobileOpen}
-            >
-              <span className="text-lg leading-none font-semibold">
-                {mobileOpen ? "✕" : "☰"}
-              </span>
-            </button>
+                {/* Premium Apply Now CTA Button */}
+                <a
+                  href="/garden#admissions"
+                  onClick={(e) => handleNavClick(e, "/garden#admissions")}
+                  className="inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-white cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(37,99,235,0.30)] hover:shadow-[0_6px_22px_rgba(37,99,235,0.45)]"
+                  style={{
+                    background: "#2563EB",
+                    padding: "8px 16px",
+                  }}
+                >
+                  <span>Apply Now</span>
+                  <span className="font-bold text-[13px] leading-none">↗</span>
+                </a>
+
+                {/* Mobile Hamburger Toggle Button */}
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(!mobileOpen)}
+                  className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-black/10 bg-black/5 text-[#111111] hover:bg-black/10 transition-colors"
+                  aria-label={
+                    mobileOpen
+                      ? "Close navigation menu"
+                      : "Open navigation menu"
+                  }
+                  aria-expanded={mobileOpen}
+                >
+                  <span className="text-lg leading-none font-semibold">
+                    {mobileOpen ? "✕" : "☰"}
+                  </span>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Subtle Gold Highlight Line at Bottom */}
@@ -332,7 +354,7 @@ export default function Navbar({
         </div>
 
         {/* Mobile Dropdown Menu (<= 900px / lg) */}
-        {mobileOpen && (
+        {SHOW_EXTENDED_NAVIGATION && mobileOpen && (
           <div
             className="pointer-events-auto w-[calc(100%-36px)] max-w-[1520px] rounded-[18px] border border-black/10 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.15)] transition-all duration-300 animate-in fade-in slide-in-from-top-3 lg:hidden"
             style={{

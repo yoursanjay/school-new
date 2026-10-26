@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     "Best Schools in Tamil Nadu",
     "SAM Universal School",
   ],
+  icons: {
+    icon: [{ url: "/Fav%20icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({

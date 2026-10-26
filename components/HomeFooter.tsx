@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, Mail, MapPin, Phone } from "lucide-react";
+import SocialLinks from "./SocialLinks";
 
 const discoverLinks = [
   { label: "About Us", href: "/garden#about" },
@@ -92,6 +93,7 @@ export default function HomeFooter() {
         <div className="home-footer__bottom">
           <p>© {new Date().getFullYear()} Sri Aurobindo Mira Universal School. All rights reserved.</p>
           <div className="home-footer__bottom-links">
+            <SocialLinks />
             <a href="mailto:universal@sriaurobindomira.org?subject=Privacy%20Policy">Privacy Policy</a>
             <a href="mailto:universal@sriaurobindomira.org?subject=Terms%20of%20Use">Terms of Use</a>
             <a className="home-footer__top-link" href="#hero">

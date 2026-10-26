@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
+import SocialLinks from "./SocialLinks";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -161,6 +162,9 @@ export default function CinematicFooter() {
             </span>
           </Link>
           <p className="footer-tagline">Learning today. Growing tomorrow.</p>
+          <div className="mt-4">
+            <SocialLinks />
+          </div>
         </div>
 
         <nav className="footer-link-group" aria-label="Quick links">
