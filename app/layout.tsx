@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
+import FixedSocialSidebar from "@/components/FixedSocialSidebar";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -41,6 +42,7 @@ export default function RootLayout({
     >
       <body className="bg-[#fbf9f5] text-slate-800 m-0 p-0 selection:bg-[#c99738] selection:text-[#0c1b33]">
         {children}
+        <FixedSocialSidebar />
       </body>
     </html>
   );

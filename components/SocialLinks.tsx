@@ -55,26 +55,14 @@ const socialLinks = [
     ),
   },
   {
-    label: "WhatsApp Channel",
-    href: "https://whatsapp.com/channel/0029VaApAurAjPXFmVeVbr2G",
-    color: "#25D366",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/school/sri-aurobindo-mira-universal-school-2/",
+    color: "#0A66C2",
     icon: (
       <svg className="h-full w-full" viewBox="0 0 24 24" aria-hidden="true">
         <path
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.3-4.7a8.5 8.5 0 1 1 16.2-4Z"
-        />
-        <path
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M8.2 7.7c.3-.6.6-.6 1-.6h.4c.2 0 .4.1.5.4l.7 1.7c.1.2.1.4 0 .6l-.5.7c-.2.2-.3.4-.1.7.3.6 1 1.5 1.8 2.1.9.7 1.6.9 1.9 1 .3.1.5.1.7-.1l.8-.9c.2-.2.4-.2.7-.1l1.6.8c.3.1.4.3.4.5 0 .3-.2 1-.6 1.3-.4.4-1.1.7-1.9.6-.9-.1-2.2-.6-3.8-1.7-1.3-.9-2.4-2.3-3.1-3.5-.6-1.1-.8-2-.5-2.8.1-.3.4-.6.7-.7Z"
+          fill="currentColor"
+          d="M5.2 7.7a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6ZM3.7 9h3v11h-3V9Zm4.8 0h2.9v1.5h.1A3.2 3.2 0 0 1 14.4 8c3.1 0 3.7 2 3.7 4.7V20h-3v-6.5c0-1.5 0-3.3-2-3.3s-2.3 1.6-2.3 3.2V20h-3V9Z"
         />
       </svg>
     ),
@@ -83,7 +71,7 @@ const socialLinks = [
 
 export default function SocialLinks() {
   return (
-    <nav className="flex items-center gap-2" aria-label="Social media">
+    <nav className="flex flex-row items-center gap-1.5" aria-label="Social media">
       {socialLinks.map(({ label, href, color, icon }) => (
         <a
           key={label}
@@ -91,10 +79,10 @@ export default function SocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/90 shadow-sm transition-transform duration-200 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white transition-transform duration-200 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           style={{ color }}
         >
-          <span className="h-[18px] w-[18px]">{icon}</span>
+          <span className="h-4 w-4">{icon}</span>
         </a>
       ))}
     </nav>
