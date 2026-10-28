@@ -60,16 +60,17 @@ export default function FixedSocialSidebar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            style={{ color }}
           >
-            <svg
-              className={styles.icon}
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              {icon}
-            </svg>
+            <span className={styles.iconCircle} style={{ color }}>
+              <svg
+                className={styles.icon}
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                {icon}
+              </svg>
+            </span>
           </a>
         ))}
       </nav>
