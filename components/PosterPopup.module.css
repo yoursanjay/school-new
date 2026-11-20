@@ -1,0 +1,169 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(12, 27, 51, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: popupFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow-y: auto;
+}
+
+.modalContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 92vw;
+  max-height: 94vh;
+  margin: auto;
+  animation: popupZoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #0c1b33;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1.5px solid #c99738;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 10px rgba(201, 151, 56, 0.3);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.closeButton:hover {
+  background: #fbf9f5;
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(201, 151, 56, 0.5);
+  border-color: #e6b85c;
+}
+
+.closeButton:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.closeIcon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.5;
+  transition: transform 0.2s ease;
+}
+
+.closeButton:hover .closeIcon {
+  transform: rotate(90deg);
+}
+
+.posterCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 30px rgba(201, 151, 56, 0.2);
+  background: #08080a;
+  max-height: calc(85vh - 54px);
+  max-width: min(90vw, 480px);
+}
+
+.posterImage {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(85vh - 54px);
+  object-fit: contain;
+  border-radius: 16px;
+  user-select: none;
+  pointer-events: auto;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popupZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .backdrop {
+    padding: 12px;
+  }
+
+  .topBar {
+    margin-bottom: 10px;
+  }
+
+  .closeButton {
+    padding: 7px 16px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+
+  .closeIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .posterCard {
+    max-height: calc(82vh - 50px);
+    border-radius: 12px;
+  }
+
+  .posterImage {
+    max-height: calc(82vh - 50px);
+    border-radius: 12px;
+  }
+}
+
+@media (max-height: 600px) {
+  .posterCard {
+    max-height: calc(80vh - 44px);
+  }
+
+  .posterImage {
+    max-height: calc(80vh - 44px);
+  }
+}
