@@ -1,0 +1,438 @@
+/* Individual school-themed navbar animations */
+
+@keyframes capFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+@keyframes goldenOrbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ballBounce {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  45% {
+    transform: translateY(-3.5px) scaleY(1.05);
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+  }
+  85% {
+    transform: translateY(0) scale(1.12, 0.88);
+  }
+}
+
+@keyframes bookFlutter {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-1.5px) rotate(-3deg);
+  }
+  70% {
+    transform: translateY(-1px) rotate(3deg);
+  }
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    transform: scale(0.92) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.15) rotate(18deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 3px rgba(244, 197, 66, 0.85));
+  }
+}
+
+@keyframes envelopeFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-2.5px) rotate(-3deg);
+  }
+}
+
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Nav Item Container */
+.navButton {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: #111111;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  user-select: none;
+  outline: none;
+}
+
+.navButton:hover {
+  color: #111111;
+}
+
+.navButton:active {
+  transform: scale(0.95);
+}
+
+.iconSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  width: 22px;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+/* 1. Home - Cap with golden orbit */
+.capWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 16px;
+  animation: capFloat 2.6s ease-in-out infinite;
+}
+
+.capIcon {
+  width: 14px;
+  height: 14px;
+  color: #111111;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.navButton:hover .capWrapper {
+  transform: translateY(-2.5px) rotate(-6deg);
+}
+
+.orbitRing {
+  position: absolute;
+  inset: -1.5px -3.5px;
+  border: 1px dashed rgba(244, 197, 66, 0.75);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: goldenOrbit 3.5s linear infinite;
+}
+
+.orbitSparkle {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #F4C542;
+  box-shadow: 0 0 6px #F4C542;
+}
+
+/* 2. Sports - Bouncing ball */
+.ballWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  animation: ballBounce 1.7s ease-in-out infinite;
+}
+
+.ballIcon {
+  width: 13px;
+  height: 13px;
+  color: #ea580c;
+  transition: transform 0.2s ease;
+}
+
+.navButton:hover .ballWrapper {
+  animation-duration: 0.9s;
+}
+
+/* 3. Campus Life - Open book */
+.bookWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  animation: bookFlutter 2.5s ease-in-out infinite;
+}
+
+.bookIcon {
+  width: 13px;
+  height: 13px;
+  color: #2563eb;
+  transition: transform 0.2s ease;
+}
+
+.navButton:hover .bookWrapper {
+  transform: translateY(-2px) scale(1.15);
+}
+
+/* 4. About Us - Sparkling star / emblem */
+.starWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  animation: starTwinkle 2.2s ease-in-out infinite;
+}
+
+.starIcon {
+  width: 13px;
+  height: 13px;
+  color: #ca8a04;
+  transition: transform 0.2s ease;
+}
+
+.navButton:hover .starWrapper {
+  transform: scale(1.22) rotate(22deg);
+  filter: drop-shadow(0 0 5px rgba(244, 197, 66, 0.9));
+}
+
+/* 5. Contact Us - Floating envelope */
+.envelopeWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  animation: envelopeFloat 2.6s ease-in-out infinite;
+}
+
+.envelopeIcon {
+  width: 13px;
+  height: 13px;
+  color: #0c1b33;
+  transition: transform 0.2s ease;
+}
+
+.navButton:hover .envelopeWrapper {
+  transform: translateY(-3px) scale(1.15) rotate(4deg);
+}
+
+/* Label & Arrow */
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.labelText {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.arrowIcon {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.2s ease;
+  color: rgba(17, 17, 17, 0.7);
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+  color: #7c3aed;
+}
+
+/* Active Gold Indicator */
+.activeUnderline {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: #F4C542;
+  border-radius: 9999px;
+  box-shadow: 0 0 6px rgba(244, 197, 66, 0.6);
+  transition: all 0.2s ease;
+}
+
+.hoverUnderline {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 1.5px;
+  background: rgba(244, 197, 66, 0.65);
+  border-radius: 9999px;
+  transition: width 0.2s ease;
+}
+
+.navButton:hover .hoverUnderline {
+  width: 16px;
+}
+
+/* Deep Purple Dropdown Menu */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  background: linear-gradient(168deg, #231140 0%, #15092b 100%);
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 20px;
+  padding: 8px;
+  box-shadow:
+    0 22px 50px -10px rgba(10, 2, 24, 0.88),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 26px -2px rgba(168, 85, 247, 0.24);
+  z-index: 1020;
+  animation: dropdownEnter 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dropdownArrow {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #231140;
+  border-left: 1px solid rgba(168, 85, 247, 0.28);
+  border-top: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 2px;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.dropdownItem:hover {
+  background: rgba(255, 255, 255, 0.11);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.dropdownItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: rgba(168, 85, 247, 0.2);
+  color: #d8b4fe;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.dropdownItem:hover .dropdownItemIcon {
+  background: rgba(168, 85, 247, 0.38);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.dropdownItemText {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background Blur Overlay */
+.blurOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 990;
+  background: rgba(18, 7, 38, 0.44);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: overlayFadeIn 0.25s ease forwards;
+  cursor: pointer;
+}
+
+/* Mobile Navigation Dropdown */
+.mobileDropdownGroup {
+  margin: 4px 0;
+  padding: 4px 6px;
+  border-radius: 14px;
+  background: rgba(35, 17, 64, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.12);
+}
+
+.mobileSubItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #111111;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.mobileSubItem:hover {
+  background: rgba(168, 85, 247, 0.12);
+  color: #7c3aed;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .capWrapper,
+  .orbitRing,
+  .ballWrapper,
+  .bookWrapper,
+  .starWrapper,
+  .envelopeWrapper,
+  .dropdownMenu,
+  .blurOverlay {
+    animation: none !important;
+    transition: none !important;
+  }
+}

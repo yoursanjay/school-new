@@ -1,47 +1,68 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Phone, UserRound } from "lucide-react";
-
-interface NavItem {
-  label: string;
-  href: string;
-  id: string;
-}
+import {
+  ChevronDown,
+  UserRound,
+  GraduationCap,
+  Newspaper,
+  Bus,
+  Award,
+  Milestone,
+  Users,
+  Landmark,
+  Phone,
+} from "lucide-react";
+import styles from "./Navbar.module.css";
 
 interface NavbarProps {
   hideDuringKingfisher?: boolean;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "/", id: "hero" },
-  { label: "About", href: "/garden#about", id: "about" },
-  { label: "Academics", href: "/garden#academics", id: "academics" },
-  { label: "Facilities", href: "/garden#facilities", id: "facilities" },
-  { label: "Student Life", href: "/garden#student-life", id: "student-life" },
-  { label: "Gallery", href: "/garden#gallery", id: "gallery" },
-  { label: "Garden", href: "/garden", id: "garden" },
-  { label: "Admissions", href: "/garden#admissions", id: "admissions" },
+interface DropdownItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const CAMPUS_LIFE_ITEMS: DropdownItem[] = [
+  { label: "Life of Sam", href: "/life-of-sam", icon: GraduationCap },
+  { label: "School News", href: "/school-news", icon: Newspaper },
+  { label: "Transport", href: "/transport", icon: Bus },
 ];
 
-const SHOW_EXTENDED_NAVIGATION = false;
+const ABOUT_US_ITEMS: DropdownItem[] = [
+  { label: "Why Sam Universe", href: "/why-sam-universe", icon: Award },
+  { label: "Our Journey", href: "/our-journey", icon: Milestone },
+  { label: "Leadership Team", href: "/leadership-team", icon: Users },
+  { label: "About Us", href: "/about-us", icon: Landmark },
+];
 
-export default function Navbar({
-  hideDuringKingfisher = false,
-}: NavbarProps) {
+export default function Navbar({ hideDuringKingfisher = false }: NavbarProps) {
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState(
-    pathname === "/" ? "hero" : "garden",
-  );
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [immersiveSectionVisible, setImmersiveSectionVisible] = useState(false);
 
-  // Trigger micro-animation on load
+  // Dropdown states
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpandedGroup, setMobileExpandedGroup] = useState<string | null>(null);
+
+  // Close dropdown whenever the route changes (React 19 pattern: adjusting state during render)
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setActiveDropdown(null);
+    setMobileOpen(false);
+  }
+
+  const navRef = useRef<HTMLElement>(null);
+
+  // Micro-animation on mount
   useEffect(() => {
     const animationFrame = window.requestAnimationFrame(() => {
       setMounted(true);
@@ -49,6 +70,7 @@ export default function Navbar({
     return () => window.cancelAnimationFrame(animationFrame);
   }, []);
 
+  // Kingfisher section visibility observer
   useEffect(() => {
     if (!hideDuringKingfisher) return;
 
@@ -63,18 +85,10 @@ export default function Navbar({
     return () => observer.disconnect();
   }, [hideDuringKingfisher]);
 
-  // Scroll listener for background opacity & top scroll progress indicator
+  // Scroll listener for background styling
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 80);
-
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0) {
-        const progress = Math.min(100, Math.max(0, (scrollY / docHeight) * 100));
-        setScrollProgress(progress);
-      }
+      setIsScrolled(window.scrollY > 80);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -83,96 +97,75 @@ export default function Navbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // IntersectionObserver for tracking the active Garden section.
+  // Close dropdown on click outside or Escape key
   useEffect(() => {
-    if (pathname !== "/garden") return;
-
-    const sectionIds = [
-      "about",
-      "academics",
-      "facilities",
-      "student-life",
-      "gallery",
-      "admissions",
-      "contact",
-    ];
-
-    const observerCallback: IntersectionObserverCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveDropdown(null);
+        setMobileOpen(false);
+      }
     };
 
-    const observer = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: "-20% 0px -55% 0px",
-      threshold: 0,
-    });
-
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) {
-        observer.observe(element);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setActiveDropdown(null);
       }
-    });
+    };
 
-    return () => observer.disconnect();
-  }, [pathname]);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleClickOutside);
 
-  // Smooth scroll handler
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    setMobileOpen(false);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-    const destination = new URL(href, window.location.href);
-    if (destination.origin !== window.location.origin || destination.pathname !== pathname) {
-      return;
-    }
-
-    e.preventDefault();
-    const targetId = destination.hash.slice(1);
-    if (!targetId) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      const offsetTop =
-        targetElement.getBoundingClientRect().top + window.scrollY - 84;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: "smooth",
-      });
-    }
+  const toggleDropdown = (name: string) => {
+    setActiveDropdown((prev) => (prev === name ? null : name));
   };
+
+  const toggleMobileGroup = (name: string) => {
+    setMobileExpandedGroup((prev) => (prev === name ? null : name));
+  };
+
+  // Active status checks
+  const isHomeActive = pathname === "/";
+  const isSportsActive = pathname === "/sports";
+  const isCampusLifeActive =
+    pathname === "/life-of-sam" ||
+    pathname === "/school-news" ||
+    pathname === "/transport" ||
+    pathname.startsWith("/campus-life");
+  const isAboutUsActive =
+    pathname === "/why-sam-universe" ||
+    pathname === "/our-journey" ||
+    pathname === "/leadership-team" ||
+    pathname === "/about-us" ||
+    pathname.startsWith("/about-us");
+  const isContactUsActive = pathname === "/contact-us";
 
   if (hideDuringKingfisher && immersiveSectionVisible) return null;
 
   return (
     <>
-      {/* Top subtle Gold Scroll Progress Bar */}
-      {SHOW_EXTENDED_NAVIGATION && (
+      {/* Background Blur Overlay for Dropdowns */}
+      {activeDropdown && (
         <div
-          className="fixed top-0 left-0 right-0 h-[2.5px] z-[10001] pointer-events-none transition-opacity duration-300"
-          style={{
-            opacity: scrollProgress > 0 ? 1 : 0,
-          }}
-        >
-          <div
-            className="h-full bg-gradient-to-r from-[#F4C542] via-[#ffe28a] to-[#F4C542] shadow-[0_0_8px_rgba(244,197,66,0.6)]"
-            style={{ width: `${scrollProgress}%` }}
-          />
-        </div>
+          className={styles.blurOverlay}
+          onClick={() => setActiveDropdown(null)}
+          aria-hidden="true"
+        />
       )}
 
       {/* Floating Header Container */}
       <header
+        ref={navRef}
         className="fixed top-0 left-0 right-0 z-[1000] pointer-events-none flex flex-col items-center"
       >
         {/* Main Floating Navbar Bar */}
         <div
-          className="pointer-events-auto relative flex items-center justify-between gap-6 transition-all duration-300 ease-out"
+          className="pointer-events-auto relative flex items-center justify-between gap-4 transition-all duration-300 ease-out"
           style={{
             margin: "10px 18px",
             width: "calc(100% - 36px)",
@@ -189,14 +182,12 @@ export default function Navbar({
             padding: "0 18px",
           }}
         >
-          {/* LEFT: Premium School Brand */}
+          {/* LEFT: School Brand Logo */}
           <Link
             href="/"
-            onClick={(e) => handleNavClick(e, "/")}
             className="flex items-center gap-3 shrink-0 cursor-pointer group select-none"
             aria-label="Sri Aurobindo Mira Universal School Home"
           >
-            {/* School wordmark */}
             <div
               className="relative w-[88px] sm:w-[128px] h-[44px] sm:h-[64px] shrink-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:scale-105"
               style={{
@@ -205,18 +196,20 @@ export default function Navbar({
                 transitionDelay: "50ms",
               }}
             >
-              <img
+              <Image
                 src="/img/logo.png"
                 alt="Sri Aurobindo Mira Universal School"
+                width={128}
+                height={64}
+                priority
                 className="w-full h-full object-contain"
               />
             </div>
-
           </Link>
 
-          {/* CENTER: Navigation Links (Desktop) */}
+          {/* CENTER: Navigation Items (Desktop) */}
           <nav
-            className="flex flex-1 items-center justify-center gap-3 transition-all duration-500 ease-out"
+            className="hidden lg:flex flex-1 items-center justify-center gap-2 xl:gap-3 transition-all duration-500 ease-out"
             aria-label="Main Navigation"
             style={{
               opacity: mounted ? 1 : 0,
@@ -224,58 +217,246 @@ export default function Navbar({
               transitionDelay: "150ms",
             }}
           >
-            {NAV_ITEMS.filter(
-              (item) => item.label === "Home" || SHOW_EXTENDED_NAVIGATION,
-            ).map((item) => {
-              const isActive =
-                (item.id === "hero" && pathname === "/") ||
-                (item.id === "garden" && pathname === "/garden") ||
-                (item.id !== "hero" &&
-                  item.id !== "garden" &&
-                  pathname === "/garden" &&
-                  activeSection === item.id);
+            {/* 1. Home */}
+            <Link
+              href="/"
+              className={styles.navButton}
+              aria-current={isHomeActive ? "page" : undefined}
+            >
+              <div className={styles.iconSlot}>
+                <div className={styles.capWrapper}>
+                  {/* Graduation cap SVG */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={styles.capIcon}
+                    aria-hidden="true"
+                  >
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                  </svg>
+                  {/* Golden orbit ring & sparkle */}
+                  <div className={styles.orbitRing} aria-hidden="true">
+                    <div className={styles.orbitSparkle} />
+                  </div>
+                </div>
+              </div>
+              <div className={styles.labelRow}>
+                <span className={styles.labelText}>Home</span>
+              </div>
+              {isHomeActive && <span className={styles.activeUnderline} />}
+              {!isHomeActive && <span className={styles.hoverUnderline} />}
+            </Link>
 
-              return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  className={`group relative px-2.5 xl:px-3 py-1.5 text-[13px] font-bold tracking-wide transition-colors duration-200 select-none ${
-                    isActive
-                      ? "text-[#111111]"
-                      : "text-[#111111] hover:text-[#111111]"
-                  }`}
-                >
-                  <span>{item.label}</span>
+            {/* 2. Sports */}
+            <Link
+              href="/sports"
+              className={styles.navButton}
+              aria-current={isSportsActive ? "page" : undefined}
+            >
+              <div className={styles.iconSlot}>
+                <div className={styles.ballWrapper}>
+                  {/* Bouncing sports ball SVG */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={styles.ballIcon}
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24" />
+                    <path d="M14.83 9.17l-5.66 5.66" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                </div>
+              </div>
+              <div className={styles.labelRow}>
+                <span className={styles.labelText}>Sports</span>
+              </div>
+              {isSportsActive && <span className={styles.activeUnderline} />}
+              {!isSportsActive && <span className={styles.hoverUnderline} />}
+            </Link>
 
-                  {/* Active small gold underline (approx 18-24px centered) */}
-                  {isActive && (
-                    <span
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[2px] bg-[#F4C542] rounded-full transition-all duration-250 ease-out"
-                      style={{
-                        boxShadow: "0 0 6px rgba(244, 197, 66, 0.6)",
-                      }}
-                    />
-                  )}
+            {/* 3. Campus Life (Dropdown) */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => toggleDropdown("campus-life")}
+                className={styles.navButton}
+                aria-expanded={activeDropdown === "campus-life"}
+                aria-haspopup="true"
+              >
+                <div className={styles.iconSlot}>
+                  <div className={styles.bookWrapper}>
+                    {/* Open book / school building SVG */}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={styles.bookIcon}
+                      aria-hidden="true"
+                    >
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                      <path d="M8 7h8m-8 4h5" />
+                    </svg>
+                  </div>
+                </div>
+                <div className={styles.labelRow}>
+                  <span className={styles.labelText}>Campus Life</span>
+                  <ChevronDown
+                    className={`${styles.arrowIcon} ${
+                      activeDropdown === "campus-life" ? styles.arrowOpen : ""
+                    }`}
+                    aria-hidden="true"
+                  />
+                </div>
+                {isCampusLifeActive && <span className={styles.activeUnderline} />}
+                {!isCampusLifeActive && <span className={styles.hoverUnderline} />}
+              </button>
 
-                  {/* Subtle animated underline on hover when not active */}
-                  {!isActive && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-[#F4C542]/70 rounded-full transition-all duration-200 ease-out group-hover:w-4" />
-                  )}
-                </a>
-              );
-            })}
+              {/* Deep Purple Dropdown */}
+              {activeDropdown === "campus-life" && (
+                <div className={styles.dropdownMenu} role="menu">
+                  <div className={styles.dropdownArrow} aria-hidden="true" />
+                  {CAMPUS_LIFE_ITEMS.map((item) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setActiveDropdown(null)}
+                        className={styles.dropdownItem}
+                        role="menuitem"
+                      >
+                        <div className={styles.dropdownItemIcon}>
+                          <IconComponent className="w-4 h-4" />
+                        </div>
+                        <div className={styles.dropdownItemText}>
+                          <span>{item.label}</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* 4. About Us (Dropdown) */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => toggleDropdown("about-us")}
+                className={styles.navButton}
+                aria-expanded={activeDropdown === "about-us"}
+                aria-haspopup="true"
+              >
+                <div className={styles.iconSlot}>
+                  <div className={styles.starWrapper}>
+                    {/* Sparkling emblem / star SVG */}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className={styles.starIcon}
+                      aria-hidden="true"
+                    >
+                      <path d="M12 1.5l2.6 6.5 6.9.6-5.2 4.6 1.6 6.8L12 16.5l-5.9 3.5 1.6-6.8-5.2-4.6 6.9-.6L12 1.5z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className={styles.labelRow}>
+                  <span className={styles.labelText}>About Us</span>
+                  <ChevronDown
+                    className={`${styles.arrowIcon} ${
+                      activeDropdown === "about-us" ? styles.arrowOpen : ""
+                    }`}
+                    aria-hidden="true"
+                  />
+                </div>
+                {isAboutUsActive && <span className={styles.activeUnderline} />}
+                {!isAboutUsActive && <span className={styles.hoverUnderline} />}
+              </button>
+
+              {/* Deep Purple Dropdown */}
+              {activeDropdown === "about-us" && (
+                <div className={styles.dropdownMenu} role="menu">
+                  <div className={styles.dropdownArrow} aria-hidden="true" />
+                  {ABOUT_US_ITEMS.map((item) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setActiveDropdown(null)}
+                        className={styles.dropdownItem}
+                        role="menuitem"
+                      >
+                        <div className={styles.dropdownItemIcon}>
+                          <IconComponent className="w-4 h-4" />
+                        </div>
+                        <div className={styles.dropdownItemText}>
+                          <span>{item.label}</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* 5. Contact Us */}
+            <Link
+              href="/contact-us"
+              className={styles.navButton}
+              aria-current={isContactUsActive ? "page" : undefined}
+            >
+              <div className={styles.iconSlot}>
+                <div className={styles.envelopeWrapper}>
+                  {/* Floating envelope SVG */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={styles.envelopeIcon}
+                    aria-hidden="true"
+                  >
+                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                </div>
+              </div>
+              <div className={styles.labelRow}>
+                <span className={styles.labelText}>Contact Us</span>
+              </div>
+              {isContactUsActive && <span className={styles.activeUnderline} />}
+              {!isContactUsActive && <span className={styles.hoverUnderline} />}
+            </Link>
           </nav>
 
-          {/* RIGHT: Phone, Contact & Premium Apply CTA */}
+          {/* RIGHT: Login & CTA & Hamburger */}
           <div
-            className="flex items-center gap-3 sm:gap-4 lg:gap-6 transition-all duration-500 ease-out"
+            className="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0 transition-all duration-500 ease-out"
             style={{
               opacity: mounted ? 1 : 0,
               transform: mounted ? "scale(1)" : "scale(0.96)",
               transitionDelay: "200ms",
             }}
           >
+            {/* Login Icon */}
             <a
               href="https://app.stppeify.com/"
               aria-label="Login"
@@ -284,65 +465,36 @@ export default function Navbar({
               <UserRound className="h-5 w-5" aria-hidden="true" />
             </a>
 
-            {SHOW_EXTENDED_NAVIGATION && (
-              <>
-                {/* Phone link (Desktop only) */}
-                <a
-                  href="tel:+919047077677"
-                  className="hidden 2xl:inline-flex items-center gap-1.5 text-[12px] font-bold text-[#111111] hover:text-[#111111] transition-colors duration-200"
-                >
-                  <Phone className="w-3.5 h-3.5 text-[#111111]" />
-                  <span>+91 9047077677</span>
-                </a>
+            {/* Apply Now Button */}
+            <a
+              href="/garden#admissions"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-white cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(37,99,235,0.30)] hover:shadow-[0_6px_22px_rgba(37,99,235,0.45)]"
+              style={{
+                background: "#2563EB",
+                padding: "8px 16px",
+              }}
+            >
+              <span>Apply Now</span>
+              <span className="font-bold text-[13px] leading-none">↗</span>
+            </a>
 
-                {/* Contact link (Desktop only) */}
-                <a
-                  href="/garden#contact"
-                  onClick={(e) => handleNavClick(e, "/garden#contact")}
-                  className={`hidden sm:inline-flex text-[12.5px] font-bold px-2 py-1 transition-colors duration-200 ${
-                    activeSection === "contact"
-                      ? "text-[#111111]"
-                      : "text-[#111111] hover:text-[#111111]"
-                  }`}
-                >
-                  Contact
-                </a>
-
-                {/* Premium Apply Now CTA Button */}
-                <a
-                  href="/garden#admissions"
-                  onClick={(e) => handleNavClick(e, "/garden#admissions")}
-                  className="inline-flex items-center gap-1.5 rounded-full font-bold text-[12px] tracking-wide text-white cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 active:scale-100 select-none shadow-[0_4px_16px_rgba(37,99,235,0.30)] hover:shadow-[0_6px_22px_rgba(37,99,235,0.45)]"
-                  style={{
-                    background: "#2563EB",
-                    padding: "8px 16px",
-                  }}
-                >
-                  <span>Apply Now</span>
-                  <span className="font-bold text-[13px] leading-none">↗</span>
-                </a>
-
-                {/* Mobile Hamburger Toggle Button */}
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(!mobileOpen)}
-                  className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-black/10 bg-black/5 text-[#111111] hover:bg-black/10 transition-colors"
-                  aria-label={
-                    mobileOpen
-                      ? "Close navigation menu"
-                      : "Open navigation menu"
-                  }
-                  aria-expanded={mobileOpen}
-                >
-                  <span className="text-lg leading-none font-semibold">
-                    {mobileOpen ? "✕" : "☰"}
-                  </span>
-                </button>
-              </>
-            )}
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-black/10 bg-black/5 text-[#111111] hover:bg-black/10 transition-colors"
+              aria-label={
+                mobileOpen ? "Close navigation menu" : "Open navigation menu"
+              }
+              aria-expanded={mobileOpen}
+            >
+              <span className="text-lg leading-none font-semibold">
+                {mobileOpen ? "✕" : "☰"}
+              </span>
+            </button>
           </div>
 
-          {/* Subtle Gold Highlight Line at Bottom */}
+          {/* Bottom highlight line */}
           <div
             className="absolute bottom-0 left-0 right-0 h-[1px] pointer-events-none rounded-b-[18px]"
             style={{
@@ -353,54 +505,210 @@ export default function Navbar({
           />
         </div>
 
-        {/* Mobile Dropdown Menu (<= 900px / lg) */}
-        {SHOW_EXTENDED_NAVIGATION && mobileOpen && (
+        {/* Mobile Dropdown Menu (lg:hidden) */}
+        {mobileOpen && (
           <div
-            className="pointer-events-auto w-[calc(100%-36px)] max-w-[1520px] rounded-[18px] border border-black/10 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.15)] transition-all duration-300 animate-in fade-in slide-in-from-top-3 lg:hidden"
+            className="pointer-events-auto w-[calc(100%-36px)] max-w-[1520px] rounded-[18px] border border-black/10 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.18)] transition-all duration-300 animate-in fade-in slide-in-from-top-3 lg:hidden max-h-[calc(100vh-100px)] overflow-y-auto"
             style={{
               backgroundColor: "rgba(248, 249, 250, 0.98)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
             }}
           >
-            <nav className="flex flex-col gap-1">
-              {NAV_ITEMS.map((item, idx) => {
-                const isActive =
-                  (item.id === "hero" && pathname === "/") ||
-                  (item.id === "garden" && pathname === "/garden") ||
-                  (item.id !== "hero" &&
-                    item.id !== "garden" &&
-                    pathname === "/garden" &&
-                    activeSection === item.id);
-                return (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all duration-200 ${
-                      isActive
-                        ? "text-[#111111] bg-black/5 font-bold"
-                        : "text-[#111111] hover:text-[#111111] hover:bg-black/5"
-                    }`}
-                    style={{
-                      animationDelay: `${idx * 40}ms`,
-                    }}
-                  >
-                    <span>{item.label}</span>
-                    {isActive && (
-                      <span className="w-2 h-2 rounded-full bg-[#F4C542]" />
-                    )}
-                  </a>
-                );
-              })}
-
-              <a
-                href="/garden#contact"
-                onClick={(e) => handleNavClick(e, "/garden#contact")}
-                className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold text-[#111111] hover:text-[#111111] hover:bg-black/5"
+            <nav className="flex flex-col gap-1.5">
+              {/* 1. Mobile Home */}
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all ${
+                  isHomeActive
+                    ? "text-[#111111] bg-black/5"
+                    : "text-[#111111] hover:bg-black/5"
+                }`}
               >
-                <span>Contact</span>
-              </a>
+                <div className="flex items-center gap-2.5">
+                  <div className={styles.capWrapper}>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="w-4 h-4 text-[#111111]"
+                    >
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                    </svg>
+                  </div>
+                  <span>Home</span>
+                </div>
+                {isHomeActive && (
+                  <span className="w-2 h-2 rounded-full bg-[#F4C542]" />
+                )}
+              </Link>
+
+              {/* 2. Mobile Sports */}
+              <Link
+                href="/sports"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all ${
+                  isSportsActive
+                    ? "text-[#111111] bg-black/5"
+                    : "text-[#111111] hover:bg-black/5"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className={styles.ballWrapper}>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="w-4 h-4 text-[#ea580c]"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24" />
+                      <path d="M14.83 9.17l-5.66 5.66" />
+                    </svg>
+                  </div>
+                  <span>Sports</span>
+                </div>
+                {isSportsActive && (
+                  <span className="w-2 h-2 rounded-full bg-[#F4C542]" />
+                )}
+              </Link>
+
+              {/* 3. Mobile Campus Life */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => toggleMobileGroup("campus-life")}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all ${
+                    isCampusLifeActive
+                      ? "text-[#111111] bg-black/5"
+                      : "text-[#111111] hover:bg-black/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className={styles.bookWrapper}>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="w-4 h-4 text-[#2563eb]"
+                      >
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                      </svg>
+                    </div>
+                    <span>Campus Life</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      mobileExpandedGroup === "campus-life" ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {mobileExpandedGroup === "campus-life" && (
+                  <div className={styles.mobileDropdownGroup}>
+                    {CAMPUS_LIFE_ITEMS.map((subItem) => {
+                      const IconComponent = subItem.icon;
+                      return (
+                        <Link
+                          key={subItem.href}
+                          href={subItem.href}
+                          onClick={() => setMobileOpen(false)}
+                          className={styles.mobileSubItem}
+                        >
+                          <IconComponent className="w-4 h-4 text-[#7c3aed]" />
+                          <span>{subItem.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Mobile About Us */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => toggleMobileGroup("about-us")}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all ${
+                    isAboutUsActive
+                      ? "text-[#111111] bg-black/5"
+                      : "text-[#111111] hover:bg-black/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className={styles.starWrapper}>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-4 h-4 text-[#ca8a04]"
+                      >
+                        <path d="M12 1.5l2.6 6.5 6.9.6-5.2 4.6 1.6 6.8L12 16.5l-5.9 3.5 1.6-6.8-5.2-4.6 6.9-.6L12 1.5z" />
+                      </svg>
+                    </div>
+                    <span>About Us</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      mobileExpandedGroup === "about-us" ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {mobileExpandedGroup === "about-us" && (
+                  <div className={styles.mobileDropdownGroup}>
+                    {ABOUT_US_ITEMS.map((subItem) => {
+                      const IconComponent = subItem.icon;
+                      return (
+                        <Link
+                          key={subItem.href}
+                          href={subItem.href}
+                          onClick={() => setMobileOpen(false)}
+                          className={styles.mobileSubItem}
+                        >
+                          <IconComponent className="w-4 h-4 text-[#7c3aed]" />
+                          <span>{subItem.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* 5. Mobile Contact Us */}
+              <Link
+                href="/contact-us"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition-all ${
+                  isContactUsActive
+                    ? "text-[#111111] bg-black/5"
+                    : "text-[#111111] hover:bg-black/5"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className={styles.envelopeWrapper}>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="w-4 h-4 text-[#0c1b33]"
+                    >
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                  </div>
+                  <span>Contact Us</span>
+                </div>
+                {isContactUsActive && (
+                  <span className="w-2 h-2 rounded-full bg-[#F4C542]" />
+                )}
+              </Link>
             </nav>
 
             <div className="mt-4 pt-4 border-t border-black/10 flex flex-col gap-2.5">
@@ -414,7 +722,7 @@ export default function Navbar({
 
               <a
                 href="/garden#admissions"
-                onClick={(e) => handleNavClick(e, "/garden#admissions")}
+                onClick={() => setMobileOpen(false)}
                 className="flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-[13px] font-bold text-white shadow-md"
                 style={{
                   background: "#2563EB",

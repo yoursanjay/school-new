@@ -1,0 +1,486 @@
+.aboutRoot {
+  --teal-deep: #033f47;
+  --teal-rich: #055e68;
+  --teal-mid: #087a87;
+  --teal-bright: #0d99a8;
+  --yellow-bright: #ffe033;
+  --yellow-gold: #f5c800;
+  --charcoal-obsidian: #0a0d0f;
+  --charcoal-surface: #12171a;
+  --ink-black: #111315;
+  --rocket-red: #e53935;
+  --paper-white: #ffffff;
+  --paper-ice: #e3f1f3;
+  --scroll-p: 0.35;
+
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  background-color: var(--teal-rich);
+  color: #ffffff;
+}
+
+.aboutRoot ::selection {
+  background-color: var(--yellow-bright);
+  color: var(--ink-black);
+}
+
+/* =========================================================================
+   WORD-BY-WORD REVEAL & STAGGER SYSTEM
+   ========================================================================= */
+.wordClip {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.wordInner {
+  display: inline-block;
+  transform: translate3d(0, 110%, 0);
+  opacity: 0;
+  transition:
+    transform 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.55s ease-out;
+  will-change: transform, opacity;
+}
+
+.isVisible .wordInner {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.revealBlock {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.isVisible .revealBlock,
+.revealBlock.isVisible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================================
+   SECTION 01 — OPEN BOOK & EDUCATIONAL DOODLES
+   ========================================================================= */
+.section01 {
+  position: relative;
+  background: radial-gradient(
+    ellipse 90% 75% at 50% 38%,
+    #0a8795 0%,
+    #055e68 55%,
+    #033f47 100%
+  );
+  isolation: isolate;
+}
+
+.tealTextureOverlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("/img/about/teal-texture.webp");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.28;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.roughBrushLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+}
+
+.doodleFloat {
+  animation: doodleFloatSlow 5.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.doodleFloatAlt {
+  animation: doodleFloatSlow 6.4s ease-in-out infinite reverse;
+  will-change: transform;
+}
+
+@keyframes doodleFloatSlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(3deg);
+  }
+}
+
+.bulbGlow {
+  animation: bulbPulse 3.2s ease-in-out infinite;
+}
+
+@keyframes bulbPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(255, 224, 51, 0.45));
+    transform: scale(1) rotate(-4deg);
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(255, 224, 51, 0.85));
+    transform: scale(1.06) rotate(2deg);
+  }
+}
+
+/* Open Book 3D Stage & Realistic Flipbook */
+.bookStage {
+  width: 100%;
+  max-width: min(740px, 100%);
+  perspective: 2000px;
+  perspective-origin: 50% 48%;
+}
+
+@media (min-width: 640px) and (min-height: 600px) {
+  .bookStage {
+    max-width: min(740px, 100%, max(420px, calc((100svh - 365px) * 1.739)));
+  }
+}
+
+.bookSpread3D {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.bookLeftFrame {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(155deg, #044a53 0%, #03333a 100%);
+  border-top: clamp(8px, 1.25vw, 14px) solid #ffffff;
+  border-left: clamp(8px, 1.25vw, 14px) solid #ffffff;
+  border-bottom: clamp(8px, 1.25vw, 14px) solid #ffffff;
+  border-right: 0;
+  box-shadow:
+    inset 12px 14px 24px rgba(0, 0, 0, 0.42),
+    inset -10px 0 18px rgba(0, 0, 0, 0.34),
+    -4px 4px 0 #d9e8eb,
+    -8px 8px 0 #b7d3d8,
+    -14px 24px 44px rgba(0, 0, 0, 0.38);
+}
+
+.bookRightBase {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-top: clamp(8px, 1.25vw, 14px) solid #ffffff;
+  border-right: clamp(8px, 1.25vw, 14px) solid #ffffff;
+  border-bottom: clamp(8px, 1.25vw, 14px) solid #ffffff;
+  border-left: 0;
+  box-shadow:
+    inset 18px 0 28px -12px rgba(2, 46, 53, 0.28),
+    4px 4px 0 #d9e8eb,
+    8px 8px 0 #b7d3d8,
+    14px 24px 44px rgba(0, 0, 0, 0.38);
+  transform-style: preserve-3d;
+}
+
+.bookSpineSeam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 22px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(2, 34, 40, 0.28) 46%,
+    rgba(2, 34, 40, 0.44) 50%,
+    rgba(2, 34, 40, 0.26) 54%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 45;
+}
+
+.bookStudentReveal {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.14s;
+  will-change: clip-path, transform, opacity;
+}
+
+.isVisible .bookStudentReveal {
+  clip-path: inset(-22% -8% 0 -8%);
+}
+
+.flipSheet {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.flipFaceFront,
+.flipFaceBack {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  background-color: #fbfaf6;
+}
+
+.flipFaceFront {
+  transform: rotateY(0deg);
+  border-left: 1px solid rgba(5, 94, 104, 0.22);
+  box-shadow: inset 18px 0 24px -14px rgba(2, 46, 53, 0.24);
+}
+
+.flipFaceBack {
+  transform: rotateY(180deg);
+  border-right: 1px solid rgba(5, 94, 104, 0.22);
+  box-shadow: inset -18px 0 24px -14px rgba(2, 46, 53, 0.24);
+}
+
+.flipCurlShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(2, 34, 40, 0.28) 0%,
+    rgba(255, 255, 255, 0.22) 28%,
+    transparent 65%,
+    rgba(2, 34, 40, 0.18) 100%
+  );
+  opacity: 0;
+  will-change: opacity;
+}
+
+.bookPageLeaf {
+  transform-origin: left center;
+  will-change: transform;
+}
+
+/* =========================================================================
+   SECTION 02 — ADVENTURE LETTER MASKS & CUTOUTS
+   ========================================================================= */
+.section02 {
+  position: relative;
+  background: radial-gradient(
+    circle at 25% 20%,
+    #111c1f 0%,
+    #0a0d0f 52%,
+    #07090b 100%
+  );
+  isolation: isolate;
+}
+
+.adventureLetterCard {
+  position: relative;
+  transition:
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s ease;
+  will-change: transform, opacity;
+}
+
+.adventureLetterMask {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: clip-path;
+}
+
+.isVisible .adventureLetterMask {
+  clip-path: inset(0 0 0 0);
+}
+
+.adventureLetterCard:hover {
+  transform: translateY(-4px) scale(1.025);
+}
+
+.cutoutCharacter {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.94);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.isVisible .cutoutCharacter {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* =========================================================================
+   SECTION 03 — TEAL BRUSH TEXTURE, YELLOW HIGHLIGHTS, MONOCHROME COLLAGE
+   ========================================================================= */
+.section03 {
+  position: relative;
+  background-color: #056470;
+  background-image:
+    radial-gradient(circle at 70% 35%, rgba(13, 153, 168, 0.38), transparent 60%),
+    linear-gradient(145deg, #077b88 0%, #055d67 52%, #034149 100%);
+  isolation: isolate;
+}
+
+.yellowHighlightStrip {
+  position: relative;
+  display: inline-block;
+  background-color: var(--yellow-bright);
+  color: var(--ink-black);
+  transform-origin: left center;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+  will-change: clip-path;
+}
+
+.isVisible .yellowHighlightStrip {
+  clip-path: inset(0 0 0 0);
+}
+
+.collageCutoutFrame {
+  position: relative;
+  opacity: 0;
+  clip-path: polygon(0 14%, 100% 6%, 98% 100%, 2% 94%);
+  transform: translate3d(-32px, 28px, 0) scale(0.96);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.isVisible .collageCutoutFrame {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.collagePhotoImg {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collageCutoutFrame:hover .collagePhotoImg {
+  transform: scale(1.045);
+}
+
+/* =========================================================================
+   SECTION 04 — BRIGHT YELLOW, PENCIL ROCKET & MAGNETIC BUTTONS
+   ========================================================================= */
+.section04 {
+  position: relative;
+  background: radial-gradient(
+    ellipse 85% 70% at 50% 42%,
+    #ffe548 0%,
+    #ffd400 58%,
+    #f5c400 100%
+  );
+  color: var(--ink-black);
+  isolation: isolate;
+}
+
+.rocketThrustWrap {
+  transform: translate3d(
+    0,
+    calc((0.5 - var(--scroll-p, 0.5)) * 78px),
+    0
+  );
+  transition: transform 0.12s linear;
+  will-change: transform;
+}
+
+.smokeCloudDraw path {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  transition: stroke-dashoffset 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.isVisible .smokeCloudDraw path {
+  stroke-dashoffset: 0;
+}
+
+.smokePuffFloat {
+  animation: smokeBillow 5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes smokeBillow {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.025, 1.04) translateY(-4px);
+  }
+}
+
+.magneticBtn {
+  --mx: 0px;
+  --my: 0px;
+  transform: translate3d(var(--mx), var(--my), 0);
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.22s ease,
+    color 0.22s ease,
+    box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+.magneticBtn:hover {
+  transform: translate3d(var(--mx), calc(var(--my) - 3px), 0) scale(1.03);
+}
+
+.magneticBtn:active {
+  transform: translate3d(var(--mx), var(--my), 0) scale(0.98);
+}
+
+/* =========================================================================
+   SECTION 05 — WHAT MAKES SAM UNIVERSE SPECIAL (EDITORIAL FEATURE)
+   ========================================================================= */
+.section05 {
+  position: relative;
+  background: linear-gradient(170deg, #062b31 0%, #05535c 52%, #07191d 100%);
+  isolation: isolate;
+}
+
+/* =========================================================================
+   ACCESSIBILITY: REDUCED MOTION
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .wordInner,
+  .revealBlock,
+  .bookLeftFrame,
+  .bookPageLeaf,
+  .adventureLetterCard,
+  .adventureLetterMask,
+  .cutoutCharacter,
+  .yellowHighlightStrip,
+  .collageCutoutFrame,
+  .collagePhotoImg,
+  .rocketThrustWrap,
+  .magneticBtn {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+  }
+
+  .bookStudentReveal {
+    animation: none !important;
+    transition: none !important;
+    clip-path: inset(-22% -8% 0 -8%) !important;
+  }
+
+  .doodleFloat,
+  .doodleFloatAlt,
+  .bulbGlow,
+  .smokePuffFloat {
+    animation: none !important;
+  }
+
+  .smokeCloudDraw path {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}

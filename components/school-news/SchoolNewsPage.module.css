@@ -1,0 +1,250 @@
+.newsRoot {
+  --bp-blue: #073a9b;
+  --bp-blue-deep: #052970;
+  --bp-blue-bright: #0c4cc4;
+  --bp-yellow: #ffd52a;
+  --bp-yellow-deep: #f0bc00;
+  --bp-red: #e53935;
+  --bp-orange: #ff6b2c;
+  --bp-paper: #fdf6e4;
+  --bp-paper-edge: #efe0bc;
+  --bp-ink: #111521;
+  --bp-ink-soft: #313a4f;
+
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  background-color: var(--bp-blue);
+  color: var(--bp-paper);
+  font-family: var(--font-news-body), system-ui, sans-serif;
+}
+
+/* Blueprint technical grid + drafting geometry */
+.blueprintBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 213, 42, 0.08), transparent 36%),
+    radial-gradient(circle at 82% 68%, rgba(229, 57, 53, 0.08), transparent 40%),
+    linear-gradient(180deg, #06338a 0%, #073a9b 48%, #052970 100%);
+}
+
+.blueprintGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px, 140px 140px, 140px 140px;
+}
+
+.blueprintGeometry {
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+}
+
+/* Persistent Three.js 3D Stage */
+.stageCanvasWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Section base */
+.section {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: clamp(64px, 7vw, 112px) clamp(18px, 4vw, 56px);
+}
+
+.container {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Editorial condensed typography */
+.displayHeading {
+  font-family: var(--font-news-condensed), Impact, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+}
+
+.scriptNote {
+  font-family: var(--font-news-script), cursive;
+  font-weight: 700;
+}
+
+.monoTag {
+  font-family: var(--font-news-mono), monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Torn parchment paper card with curled edge shadow */
+.parchmentSheet {
+  position: relative;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.72), transparent 52%),
+    linear-gradient(155deg, #fffaf0 0%, var(--bp-paper) 58%, var(--bp-paper-edge) 100%);
+  color: var(--bp-ink);
+  border: 2px solid rgba(17, 21, 33, 0.14);
+  box-shadow:
+    0 22px 45px -16px rgba(3, 18, 56, 0.56),
+    0 4px 0 rgba(17, 21, 33, 0.12),
+    inset 0 -10px 24px rgba(196, 169, 114, 0.22);
+}
+
+.parchmentCurl {
+  position: relative;
+}
+
+.parchmentCurl::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: -10px;
+  width: 44%;
+  height: 18px;
+  z-index: -1;
+  background: rgba(2, 12, 38, 0.48);
+  filter: blur(8px);
+  transform: rotate(2.4deg);
+}
+
+/* Yellow & Red Stationery Panels */
+.yellowPanel {
+  background: linear-gradient(135deg, #ffe04d 0%, var(--bp-yellow) 70%, var(--bp-yellow-deep) 100%);
+  color: var(--bp-ink);
+  border: 2.5px solid var(--bp-ink);
+  box-shadow: 6px 6px 0 var(--bp-ink);
+}
+
+.redStamp {
+  background: var(--bp-red);
+  color: #fff;
+  border: 2px solid var(--bp-ink);
+  box-shadow: 4px 4px 0 var(--bp-ink);
+}
+
+.orangeBadge {
+  background: var(--bp-orange);
+  color: #fff;
+  border: 2px solid var(--bp-ink);
+  box-shadow: 3px 3px 0 var(--bp-ink);
+}
+
+/* Masking tape & pushpin details */
+.maskingTape {
+  position: absolute;
+  width: 96px;
+  height: 26px;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 213, 42, 0.9),
+    rgba(255, 213, 42, 0.9) 8px,
+    rgba(245, 194, 16, 0.92) 8px,
+    rgba(245, 194, 16, 0.92) 16px
+  );
+  border-left: 2px dashed rgba(17, 21, 33, 0.2);
+  border-right: 2px dashed rgba(17, 21, 33, 0.2);
+  box-shadow: 0 4px 10px rgba(3, 18, 56, 0.28);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Hero Section 01 */
+.heroSection {
+  min-height: 100svh;
+  padding-top: clamp(92px, 11vh, 130px);
+  padding-bottom: clamp(48px, 6vh, 80px);
+  display: flex;
+  align-items: center;
+}
+
+.heroScrollPaper {
+  position: relative;
+  transform-origin: left center;
+  border-radius: 6px 22px 18px 6px;
+}
+
+.heroSharpenerBadge {
+  background: linear-gradient(145deg, #f1423e 0%, #c92320 100%);
+  border: 3px solid var(--bp-ink);
+  box-shadow: 8px 8px 0 var(--bp-ink);
+}
+
+/* Irregular Torn Paper Clip Paths (matching SVG defs in StationeryArtwork) */
+.maskTornA {
+  clip-path: url(#sam-torn-mask-a);
+}
+
+.maskTornB {
+  clip-path: url(#sam-torn-mask-b);
+}
+
+.maskTornC {
+  clip-path: url(#sam-torn-mask-c);
+}
+
+.maskTornD {
+  clip-path: url(#sam-torn-mask-d);
+}
+
+/* Interactive Card Hover */
+.newsCard {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease;
+}
+
+.newsCard:hover {
+  transform: translateY(-6px) rotate(-0.4deg);
+}
+
+/* Section Divider Ruler */
+.blueprintRuler {
+  height: 18px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 213, 42, 0.72) 0 2px,
+    transparent 2px 14px
+  );
+  border-top: 2px solid rgba(255, 213, 42, 0.55);
+  opacity: 0.78;
+}
+
+/* Progress Rail */
+.progressRail {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 1024px) {
+  .progressRail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newsCard {
+    transition: none;
+  }
+  .newsCard:hover {
+    transform: none;
+  }
+}

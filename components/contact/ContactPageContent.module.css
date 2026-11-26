@@ -1,0 +1,357 @@
+/* Contact Page 3D Cinematic Styling & Animations */
+
+.contactWrapper {
+  background-color: #140f24;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, #2e1a52 0%, rgba(30, 20, 52, 0.95) 45%, #100b1d 100%),
+    radial-gradient(circle 600px at 50% 45%, rgba(147, 51, 234, 0.12) 0%, transparent 70%);
+  color: #ffffff;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  perspective: 1200px;
+}
+
+/* Background Ambient Lighting & Stars */
+.ambientGlowHero {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(850px, 95vw);
+  height: 400px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(244, 197, 66, 0.1) 40%, transparent 72%);
+  filter: blur(65px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambientGlowCampus {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(900px, 95vw);
+  height: 500px;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.18) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 75%);
+  filter: blur(75px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 3D Title: CONTACT */
+.heroTitle3D {
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-shadow:
+    0 1px 0 #e2e8f0,
+    0 2px 0 #cbd5e1,
+    0 3px 0 #94a3b8,
+    0 4px 0 #64748b,
+    0 6px 1px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 255, 255, 0.45),
+    0 12px 30px rgba(0, 0, 0, 0.8);
+  user-select: none;
+  transform: translateZ(20px);
+}
+
+/* Soft Feathered Edge Blend for 3D Artworks */
+.featherBlend {
+  -webkit-mask-image: radial-gradient(ellipse 95% 90% at 50% 50%, black 82%, transparent 100%);
+  mask-image: radial-gradient(ellipse 95% 90% at 50% 50%, black 82%, transparent 100%);
+}
+
+/* Continuous 3D Floating Animations */
+@keyframes heroIslandFloat {
+  0%, 100% {
+    transform: translateY(0) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(-9px) rotateX(1deg);
+  }
+}
+
+@keyframes bookFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.02);
+  }
+}
+
+@keyframes campusFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+
+@keyframes starTwinkle {
+  0%, 100% {
+    transform: scale(0.85);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(244, 197, 66, 0.95));
+  }
+}
+
+@keyframes auraPulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+}
+
+.floatingHeroIsland {
+  animation: heroIslandFloat 4.8s ease-in-out infinite;
+}
+
+.floatingBook {
+  animation: bookFloat 4.4s ease-in-out infinite;
+}
+
+.floatingCampus {
+  animation: campusFloat 5.2s ease-in-out infinite;
+}
+
+.twinklingStar {
+  animation: starTwinkle 2.6s ease-in-out infinite;
+}
+
+.auraPulse {
+  animation: auraPulse 3.2s ease-in-out infinite;
+}
+
+/* 3D Enquiry Button Capsules */
+.enquiryButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px 8px 10px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(42, 26, 75, 0.85) 0%, rgba(22, 14, 40, 0.9) 100%);
+  border: 1.5px solid rgba(168, 85, 247, 0.38);
+  box-shadow:
+    0 10px 24px -4px rgba(10, 3, 22, 0.75),
+    0 0 16px -2px rgba(168, 85, 247, 0.22),
+    inset 0 1px 1px rgba(255, 255, 255, 0.22),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  outline: none;
+}
+
+.enquiryButton:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: linear-gradient(135deg, rgba(58, 36, 105, 0.95) 0%, rgba(32, 20, 60, 0.98) 100%);
+  border-color: rgba(216, 180, 254, 0.75);
+  box-shadow:
+    0 16px 36px -6px rgba(168, 85, 247, 0.4),
+    0 0 24px rgba(168, 85, 247, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+.enquiryButton:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.enquiryIconBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.22s ease;
+}
+
+.enquiryButton:hover .enquiryIconBadge {
+  transform: scale(1.12);
+}
+
+.enquiryLabel {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* 3D Contact Info Strip */
+.infoStrip {
+  background: linear-gradient(145deg, rgba(34, 20, 60, 0.85) 0%, rgba(18, 11, 32, 0.9) 100%);
+  border: 1.5px solid rgba(168, 85, 247, 0.35);
+  border-radius: 9999px;
+  box-shadow:
+    0 16px 40px -8px rgba(10, 3, 24, 0.75),
+    0 0 20px -2px rgba(147, 51, 234, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.25s ease;
+}
+
+.infoStrip:hover {
+  border-color: rgba(216, 180, 254, 0.6);
+  box-shadow:
+    0 20px 48px -6px rgba(147, 51, 234, 0.32),
+    0 0 28px rgba(168, 85, 247, 0.28);
+}
+
+/* 3D Action Buttons in Campus Section */
+.button3DGetInTouch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 30px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 10px 28px -4px rgba(225, 29, 72, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.button3DGetInTouch:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #9f1239 100%);
+  box-shadow:
+    0 14px 34px -4px rgba(225, 29, 72, 0.7),
+    0 0 20px rgba(225, 29, 72, 0.4),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.5);
+}
+
+.button3DGetInTouch:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.button3DPlanVisit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 30px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(38, 22, 68, 0.95) 0%, rgba(20, 12, 38, 0.98) 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1.5px solid rgba(168, 85, 247, 0.45);
+  box-shadow:
+    0 10px 28px -4px rgba(10, 3, 24, 0.65),
+    0 0 16px -2px rgba(168, 85, 247, 0.25),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.button3DPlanVisit:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: linear-gradient(135deg, rgba(54, 32, 98, 0.98) 0%, rgba(28, 16, 52, 1) 100%);
+  border-color: rgba(216, 180, 254, 0.8);
+  box-shadow:
+    0 14px 34px -4px rgba(168, 85, 247, 0.4),
+    0 0 22px rgba(168, 85, 247, 0.35);
+}
+
+.button3DPlanVisit:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Form 3D Container */
+.formContainer {
+  background: linear-gradient(168deg, rgba(36, 22, 64, 0.88) 0%, rgba(18, 11, 34, 0.94) 100%);
+  border: 1.5px solid rgba(168, 85, 247, 0.32);
+  border-radius: 30px;
+  box-shadow:
+    0 26px 70px -10px rgba(8, 2, 20, 0.85),
+    0 0 30px -4px rgba(168, 85, 247, 0.25),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.inputField {
+  width: 100%;
+  background: rgba(18, 11, 32, 0.85);
+  border: 1.5px solid rgba(168, 85, 247, 0.28);
+  border-radius: 14px;
+  padding: 13px 18px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.22s ease;
+  outline: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.inputField:focus {
+  border-color: #c084fc;
+  background: rgba(26, 15, 48, 0.98);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.inputField::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Scroll Trigger Animations */
+.revealItem {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .floatingHeroIsland,
+  .floatingBook,
+  .floatingCampus,
+  .twinklingStar,
+  .auraPulse,
+  .revealItem {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1,0 +1,409 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Life of SAM — Cinematic Documentary Stylesheet
+   Colour tokens:
+     Navy Deep  : #071021   Navy        : #0B162C
+     Sky Blue   : #6EC1E4   Sky Soft    : #D9F0FB
+     Mint       : #7EE0B5   Mint Soft   : #E2F8EE
+     Ivory      : #FAF7F0   Ivory Warm  : #F2ECE0
+     Orange     : #F4843F   Ink         : #131C2E
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Root container ── */
+.losDocRoot {
+  --doc-navy:       #0b162c;
+  --doc-navy-deep:  #071021;
+  --doc-sky:        #6ec1e4;
+  --doc-sky-soft:   #d9f0fb;
+  --doc-mint:       #7ee0b5;
+  --doc-mint-soft:  #e2f8ee;
+  --doc-ivory:      #faf7f0;
+  --doc-ivory-warm: #f2ece0;
+  --doc-orange:     #f4843f;
+  --doc-ink:        #131c2e;
+
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  background-color: var(--doc-navy-deep);
+  color: var(--doc-ivory);
+  font-family: var(--font-los-body), system-ui, sans-serif;
+}
+
+/* ── Fixed 3-D canvas overlay ── */
+.stageWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* ── Generic section ── */
+.section {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  overflow: hidden;
+  padding: clamp(80px, 10vw, 148px) clamp(20px, 5.5vw, 80px);
+}
+
+/* ── Centred content container ── */
+.container {
+  position: relative;
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+/* ══════════════════════════════════
+   Typography
+   ══════════════════════════════════ */
+.displayHeading {
+  font-family: var(--font-los-condensed), Georgia, serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+}
+
+.monoTag {
+  font-family: var(--font-los-mono), monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Dynamic heading sizes */
+.heroHeading {
+  font-size: clamp(2.8rem, 7.5vw, 7.2rem);
+}
+
+.sectionHeading {
+  font-size: clamp(2.4rem, 5.5vw, 5.4rem);
+}
+
+.sectionHeadingLg {
+  font-size: clamp(2.6rem, 6.5vw, 6.4rem);
+}
+
+.sectionHeadingXl {
+  font-size: clamp(3rem, 8.5vw, 9rem);
+  letter-spacing: -0.04em;
+  line-height: 0.88;
+}
+
+.finaleHeading {
+  font-size: clamp(2.8rem, 7vw, 7.5rem);
+}
+
+.heroParagraph {
+  font-size: clamp(1rem, 1.9vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+/* ══════════════════════════════════
+   Time badge
+   ══════════════════════════════════ */
+.timeBadge {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeBadgeDark {
+  background: rgba(110, 193, 228, 0.14);
+  color: #0a2a44;
+  border: 1px solid rgba(110, 193, 228, 0.42);
+}
+
+.timeBadgeLight {
+  background: rgba(250, 247, 240, 0.14);
+  color: var(--doc-ivory);
+  border: 1px solid rgba(250, 247, 240, 0.32);
+}
+
+.timeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: timeDotPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes timeDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ══════════════════════════════════
+   Buttons
+   ══════════════════════════════════ */
+.ctaButton {
+  font-family: var(--font-los-mono), monospace;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 11px;
+  background: var(--doc-orange);
+  color: var(--doc-navy-deep);
+  border-radius: 999px;
+  box-shadow: 0 16px 36px -10px rgba(244, 132, 63, 0.58);
+  transition: transform 240ms ease, background-color 240ms ease, box-shadow 240ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ctaButton:hover {
+  transform: translateY(-3px);
+  background: #ff9d5c;
+  box-shadow: 0 22px 44px -10px rgba(244, 132, 63, 0.7);
+}
+
+.ghostButton {
+  font-family: var(--font-los-mono), monospace;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: var(--doc-ivory);
+  border-radius: 999px;
+  border: 1.5px solid rgba(250, 247, 240, 0.35);
+  display: inline-flex;
+  align-items: center;
+  transition: border-color 240ms ease, background 240ms ease;
+}
+
+.ghostButton:hover {
+  border-color: rgba(250, 247, 240, 0.7);
+  background: rgba(250, 247, 240, 0.08);
+}
+
+/* ══════════════════════════════════
+   Hero image wrapper (sections 01 + 07)
+   ══════════════════════════════════ */
+.heroImageWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(7, 16, 33, 0.72) 0%, rgba(7, 16, 33, 0.28) 60%, transparent 100%),
+    linear-gradient(to top, rgba(7, 16, 33, 0.80) 0%, rgba(7, 16, 33, 0.24) 50%, transparent 100%);
+}
+
+.finaleOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(7, 16, 33, 0.9) 0%, rgba(7, 16, 33, 0.4) 45%, transparent 100%);
+}
+
+/* ── Morning atmospheric vignette ── */
+.morningVignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 90%, rgba(244, 132, 63, 0.18), transparent),
+    radial-gradient(ellipse 50% 50% at 90% 10%, rgba(110, 193, 228, 0.12), transparent);
+  pointer-events: none;
+}
+
+/* Bus thumbnail */
+.busThumbnail {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  width: 240px;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  border: 2px solid rgba(250,247,240,0.25);
+}
+
+/* Chapter counter */
+.chapterCounter {
+  position: absolute;
+  bottom: 28px;
+  left: clamp(20px, 5.5vw, 80px);
+  z-index: 10;
+  font-size: 10px;
+  color: rgba(250, 247, 240, 0.6);
+}
+
+.chapterCounterLight {
+  color: rgba(250, 247, 240, 0.55);
+}
+
+/* ══════════════════════════════════
+   Photo captions (hover / absolute)
+   ══════════════════════════════════ */
+.photoCaption {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  font-size: 9px;
+  color: rgba(250, 247, 240, 0.85);
+  background: rgba(7, 16, 33, 0.52);
+  backdrop-filter: blur(6px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 247, 240, 0.18);
+}
+
+/* ══════════════════════════════════
+   Section backgrounds
+   ══════════════════════════════════ */
+
+/* 01 — Morning (deep star-blue) */
+.section01 {
+  background: #071021;
+  min-height: 100svh;
+}
+
+/* 02 — Classrooms (soft ivory) */
+.section02 {
+  background: linear-gradient(170deg, var(--doc-ivory) 0%, var(--doc-ivory-warm) 100%);
+  color: var(--doc-ink);
+}
+
+/* 03 — Friendships (deep midnight) */
+.section03 {
+  background:
+    radial-gradient(ellipse 55% 48% at 15% 15%, rgba(110, 193, 228, 0.18), transparent),
+    radial-gradient(ellipse 50% 55% at 85% 85%, rgba(126, 224, 181, 0.14), transparent),
+    linear-gradient(170deg, #0b162c 0%, #071021 100%);
+  color: var(--doc-ivory);
+}
+
+/* 04 — Beyond (sky-mint fresh) */
+.section04 {
+  background:
+    radial-gradient(ellipse 55% 50% at 85% 15%, rgba(126, 224, 181, 0.32), transparent),
+    radial-gradient(ellipse 50% 55% at 15% 85%, rgba(110, 193, 228, 0.28), transparent),
+    linear-gradient(165deg, #e8f8f4 0%, #d4edf9 100%);
+  color: var(--doc-ink);
+}
+
+/* 05 — Talent (warm cream-ivory) */
+.section05 {
+  background: linear-gradient(165deg, var(--doc-ivory-warm) 0%, #ece4d8 100%);
+  color: var(--doc-ink);
+}
+
+/* 06 — Moments (deep midnight) */
+.section06 {
+  background:
+    radial-gradient(ellipse 50% 45% at 20% 20%, rgba(110, 193, 228, 0.14), transparent),
+    radial-gradient(ellipse 55% 50% at 80% 80%, rgba(126, 224, 181, 0.12), transparent),
+    linear-gradient(170deg, #0b162c 0%, #071021 100%);
+  color: var(--doc-ivory);
+}
+
+/* 07 — Finale (deep midnight base, photo dominates) */
+.section07 {
+  background: #071021;
+  min-height: 90svh;
+}
+
+/* ══════════════════════════════════
+   Right-side progress rail
+   ══════════════════════════════════ */
+.progressRail {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.railItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border: none;
+  background: rgba(11, 22, 44, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(250, 247, 240, 0.65);
+  padding: 6px 10px 6px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(110, 193, 228, 0.22);
+  transition: all 220ms ease;
+  overflow: hidden;
+  max-width: 36px;
+}
+
+.railItem:hover {
+  max-width: 160px;
+  color: rgba(250, 247, 240, 0.9);
+  border-color: rgba(126, 224, 181, 0.5);
+  background: rgba(11, 22, 44, 0.9);
+}
+
+.railItemActive {
+  max-width: 160px;
+  background: var(--doc-orange);
+  color: var(--doc-navy-deep);
+  border-color: var(--doc-orange);
+  box-shadow: 0 8px 20px -6px rgba(244, 132, 63, 0.6);
+}
+
+.railNum {
+  font-family: var(--font-los-mono), monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  min-width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.railTitle {
+  font-family: var(--font-los-mono), monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  max-width: 0;
+  transition: opacity 200ms ease 50ms, max-width 200ms ease;
+}
+
+.railItem:hover .railTitle,
+.railItemActive .railTitle {
+  opacity: 1;
+  max-width: 120px;
+}
+
+@media (max-width: 1024px) {
+  .progressRail { display: none; }
+}
+
+/* ══════════════════════════════════
+   Reduced-motion overrides
+   ══════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ctaButton,
+  .ghostButton,
+  .railItem {
+    transition: none;
+  }
+  .ctaButton:hover { transform: none; }
+  .timeDot { animation: none; }
+}

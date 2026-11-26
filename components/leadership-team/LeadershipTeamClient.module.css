@@ -1,0 +1,354 @@
+.pageRoot {
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  background: #F8F6F1;
+  color: #1E242B;
+}
+
+/* =========================================================================
+   UNIFIED STICKY 217-FRAME CANVAS + SCROLL STORY EXPERIENCE
+   ========================================================================= */
+.experienceSection {
+  position: relative;
+  width: 100%;
+  background: #0b1628;
+}
+
+.stickyViewport {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #0b1628;
+  isolation: isolate;
+}
+
+.posterFrame {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.posterImage {
+  object-fit: cover;
+  object-position: center 44%;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 280ms ease-out;
+}
+
+.posterHidden {
+  opacity: 0;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease-out;
+}
+
+.canvasVisible {
+  opacity: 1;
+}
+
+/* Subtle cinema edge contrast scrims leaving central subjects clear */
+.topScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    radial-gradient(
+      ellipse 56% 48% at 22% 24%,
+      rgba(16, 35, 63, 0.62) 0%,
+      rgba(16, 35, 63, 0.24) 54%,
+      transparent 82%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(16, 35, 63, 0.36) 0%,
+      transparent 38%,
+      rgba(16, 35, 63, 0.34) 100%
+    );
+  pointer-events: none;
+}
+
+/* Warm off-white subtle glaze activated only while reading cards over light frames */
+.warmBackdropVeil {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: linear-gradient(
+    180deg,
+    rgba(248, 246, 241, 0.24) 0%,
+    rgba(248, 246, 241, 0.38) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Bottom loading chip & progress bar inside sticky canvas stage */
+.stageStatusBar {
+  position: absolute;
+  inset: auto 0 12px 0;
+  z-index: 6;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 88px 0 64px;
+  pointer-events: none;
+}
+
+.loadingChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  background: rgba(16, 35, 63, 0.86);
+  border: 1px solid rgba(217, 164, 65, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #F8F6F1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.loadingSpinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(217, 164, 65, 0.35);
+  border-top-color: #D9A441;
+  animation: spinLoader 0.8s linear infinite;
+}
+
+@keyframes spinLoader {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.progressTrack {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 7;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+.progressFill {
+  width: 100%;
+  height: 100%;
+  background: #D9A441;
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* =========================================================================
+   SCROLLING CONTENT BANDS INTEGRATED OVER THE 217-FRAME CANVAS
+   ========================================================================= */
+.scrollOverlayTrack {
+  position: relative;
+  z-index: 10;
+  margin-top: -100vh;
+  margin-top: -100dvh;
+  pointer-events: none;
+}
+
+.bandContainer {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding-left: clamp(60px, 6.2vw, 88px);
+  padding-right: clamp(20px, 5vw, 76px);
+}
+
+.heroBand {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 104px;
+  padding-bottom: 38px;
+}
+
+.heroIntroCard {
+  max-width: 540px;
+  padding: 20px 24px;
+  border-radius: 22px;
+  background: rgba(16, 35, 63, 0.68);
+  border: 1px solid rgba(217, 164, 65, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 44px rgba(8, 16, 30, 0.32);
+  pointer-events: auto;
+}
+
+.heroBottomRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-right: 68px; /* Keep clear of WhatsApp FAB */
+  pointer-events: auto;
+}
+
+.scrollPrompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  border-radius: 9999px;
+  background: #10233F;
+  border: 1px solid rgba(217, 164, 65, 0.55);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(16, 35, 63, 0.35);
+  transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
+}
+
+.scrollPrompt:hover {
+  background: #183257;
+  border-color: #D9A441;
+  transform: translateY(-2px);
+}
+
+.scrollArrowBounce {
+  display: inline-flex;
+  animation: scrollChevron 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollChevron {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.storyBand {
+  padding-top: clamp(64px, 12vh, 140px);
+  padding-bottom: clamp(64px, 12vh, 140px);
+}
+
+.ctaBand {
+  padding-top: clamp(72px, 14vh, 160px);
+  padding-bottom: clamp(88px, 14vh, 150px);
+}
+
+@media (min-width: 1024px) {
+  .storyBand {
+    min-height: 92vh;
+    min-height: 92dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ctaBand {
+    min-height: 82vh;
+    min-height: 82dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
+
+/* Translucent Warm Off-White Glass Surface for Side-by-Side Readability */
+.warmGlassPanel {
+  background: rgba(248, 246, 241, 0.92);
+  border: 1px solid rgba(217, 164, 65, 0.36);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 22px 54px rgba(16, 35, 63, 0.16);
+  pointer-events: auto;
+}
+
+.whiteContentCard {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(217, 164, 65, 0.34);
+  box-shadow: 0 22px 54px rgba(16, 35, 63, 0.15);
+  pointer-events: auto;
+}
+
+.educatorPhotoWrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(217, 164, 65, 0.45);
+  box-shadow: 0 18px 40px rgba(16, 35, 63, 0.18);
+  background: #10233F;
+}
+
+/* Mobile & Tablet Refinement */
+@media (max-width: 1024px) {
+  .stageStatusBar {
+    padding: 0 80px 0 60px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bandContainer {
+    padding-left: 58px;
+    padding-right: 16px;
+  }
+
+  .heroBand {
+    padding-top: 90px;
+    padding-bottom: 28px;
+  }
+
+  .heroIntroCard {
+    padding: 16px 18px;
+    border-radius: 18px;
+  }
+
+  .storyBand {
+    padding-top: 52px;
+    padding-bottom: 52px;
+  }
+
+  .ctaBand {
+    padding-top: 44px;
+    padding-bottom: 76px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .posterImage,
+  .canvas,
+  .scrollPrompt {
+    transition: none !important;
+  }
+
+  .scrollArrowBounce,
+  .loadingSpinner {
+    animation: none !important;
+  }
+}

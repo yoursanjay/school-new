@@ -1,0 +1,117 @@
+.journeyPageRoot {
+  --red: #E31E24;
+  --white: #FFFFFF;
+  --paper: #F7F5F0;
+  --charcoal: #171717;
+  --grey: #D8D8D8;
+
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  background-color: var(--paper);
+  color: var(--charcoal);
+  background-image:
+    linear-gradient(to right, rgba(23, 23, 23, 0.03) 1px, transparent 1px),
+    radial-gradient(rgba(23, 23, 23, 0.04) 1px, transparent 0);
+  background-size: 160px 160px, 24px 24px;
+}
+
+.fontDisplay {
+  font-family: var(--font-journey-display), "Barlow Condensed", sans-serif;
+  letter-spacing: -0.015em;
+}
+
+.fontMono {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Word animation mask wrapper */
+.wordClipWrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+/* Signature Continuous Vertical Red Spine */
+.redSpineTrack {
+  background-color: var(--charcoal);
+  border-left: 1px solid var(--grey);
+  border-right: 1px solid var(--grey);
+}
+
+.redSpineFill {
+  background-color: var(--red);
+  box-shadow: 0 12px 32px rgba(227, 30, 36, 0.22);
+}
+
+/* Fine measurement ruler ticks along spine edge */
+.tickRuler {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(23, 23, 23, 0.34) 0,
+    rgba(23, 23, 23, 0.34) 1px,
+    transparent 1px,
+    transparent 18px
+  );
+}
+
+/* Editorial High-Contrast Documentary Grayscale Treatment */
+.docGrayscale {
+  filter: grayscale(100%) contrast(1.12) brightness(0.98);
+  transition:
+    filter 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photoFrame:hover .docGrayscale,
+.photoFrame:focus-within .docGrayscale {
+  filter: grayscale(100%) contrast(1.18) brightness(1.02);
+}
+
+/* Section 3 Editorial Poster Strips (strictly 5-color documentary palette) */
+.posterBoardSurface {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(rgba(23, 23, 23, 0.055) 1px, transparent 0),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.45), rgba(216, 216, 216, 0.18));
+  background-size: 18px 18px, 100% 100%;
+}
+
+.posterVerticalType {
+  font-family: var(--font-journey-display), "Barlow Condensed", sans-serif;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: -0.025em;
+  line-height: 0.85;
+}
+
+.posterDuotoneDark {
+  filter: grayscale(100%) contrast(1.18) brightness(0.98);
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), filter 450ms ease;
+}
+
+.posterDuotoneInk {
+  filter: grayscale(100%) contrast(1.22) brightness(1.06);
+  mix-blend-mode: multiply;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), filter 450ms ease;
+}
+
+.posterStripCard:hover .posterDuotoneDark,
+.posterStripCard:focus-within .posterDuotoneDark,
+.posterStripCard:hover .posterDuotoneInk,
+.posterStripCard:focus-within .posterDuotoneInk {
+  transform: scale(1.045);
+}
+
+/* Section 4 High-Contrast Finale Photography */
+.finalePhoto {
+  filter: grayscale(100%) contrast(1.16) brightness(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .docGrayscale,
+  .posterDuotoneDark,
+  .posterDuotoneInk {
+    transition: none;
+  }
+}
